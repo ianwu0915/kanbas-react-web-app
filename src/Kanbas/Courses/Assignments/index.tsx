@@ -9,8 +9,11 @@ import {
 import { MdOutlineAssignment } from "react-icons/md";
 import LessonControlButtons from "./LessonControlButtons";
 import { IoEllipsisVertical } from "react-icons/io5";
+import { assignments } from "../../Database";
+import { useParams } from "react-router";
 
 export default function Assignments() {
+  const { cid } = useParams();
   return (
     <div id="wd-assignments" className="me-4">
       <div className="d-flex justify-content-between mb-5 ms-5">
@@ -48,79 +51,34 @@ export default function Assignments() {
           </div>
           <IoEllipsisVertical className="fs-4" />
         </div>
-        <li className="wd-assignment-list-item list-group-item">
-          <div className="d-flex align-items-center">
-            <BsGripVertical className="me-2 fs-5" />
-            <MdOutlineAssignment
-              className="me-3"
-              size={23}
-              style={{ color: "green" }}
-            />
-            <div className="flex-grow-1 w-50">
-              <a
-                className="wd-assignment-link d-block"
-                href="#/Kanbas/Courses/1234/Assignments/123"
-              >
-                A1
-              </a>
-              <p className="mb-0">
-                <span className="text-danger">Multiple Modules</span> |{" "}
-                <strong>Not available until</strong> May 6 at 12:00am |{" "}
-                <strong>Due</strong> May 13 at 11:59pm | 100 pts
-              </p>
-            </div>
-
-            <LessonControlButtons />
-          </div>
-        </li>
-        <li className="wd-assignment-list-item list-group-item">
-          <div className="d-flex align-items-center">
-            <BsGripVertical className="me-2 fs-5" />
-            <MdOutlineAssignment
-              className="me-3"
-              size={23}
-              style={{ color: "green" }}
-            />
-            <div className="flex-grow-1 w-50">
-              <a
-                className="wd-assignment-link d-block"
-                href="#/Kanbas/Courses/1234/Assignments/123"
-              >
-                A2
-              </a>
-              <p className="mb-0">
-                <span className="text-danger">Multiple Modules</span> |{" "}
-                <strong>Not available until</strong> May 13 at 12:00am |{" "}
-                <strong>Due</strong> May 20 at 11:59pm | 100 pts
-              </p>
-            </div>
-            <LessonControlButtons />
-          </div>
-        </li>
-        <li className="wd-assignment-list-item list-group-item">
-          <div className="d-flex align-items-center">
-            <BsGripVertical className="me-2 fs-5" />
-            <MdOutlineAssignment
-              className="me-3"
-              size={23}
-              style={{ color: "green" }}
-            />
-            <div className="flex-grow-1 w-50">
-              <a
-                className="wd-assignment-link d-block"
-                href="#/Kanbas/Courses/1234/Assignments/123"
-              >
-                A3
-              </a>
-              <p className="mb-0">
-                <span className="text-danger">Multiple Modules</span> |{" "}
-                <strong>Not available until</strong> May 20 at 12:00am |{" "}
-                <strong>Due</strong> May 27 at 11:59pm | 100 pts
-              </p>
-            </div>
-            <LessonControlButtons />
-          </div>
-        </li>
+        {assignments
+          .filter((assignment) => assignment.course === cid)
+          .map((assignment) => (
+            <li className="wd-assignment-list-item list-group-item">
+              <div className="d-flex align-items-center">
+                <BsGripVertical className="me-2 fs-5" />
+                <MdOutlineAssignment
+                  className="me-3"
+                  size={23}
+                  style={{ color: "green" }}
+                />
+                <div className="flex-grow-1 w-50">
+                  <a
+                    className="wd-assignment-link d-block"
+                    href="#/Kanbas/Courses/1234/Assignments/123"
+                  >
+                    {assignment.title}
+                  </a>
+                  <p className="mb-0">
+                    <span className="text-danger">Multiple Modules</span> |{" "}
+                    <strong>Not available until</strong> May 20 at 12:00am |{" "}
+                    <strong>Due</strong> May 27 at 11:59pm | 100 pts
+                  </p>
+                </div>
+                <LessonControlButtons />
+              </div>
+            </li>
+          ))}
       </ul>
     </div>
   );

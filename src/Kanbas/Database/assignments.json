@@ -1,0 +1,92 @@
+[
+  {
+    "_id": "A101",
+    "title": "Propulsion Assignment",
+    "course": "RS101"
+  },
+  {
+    "_id": "A102",
+    "title": "Combustion Analysis",
+    "course": "RS101"
+  },
+  {
+    "_id": "A103",
+    "title": "Nozzle Design Project",
+    "course": "RS101"
+  },
+  {
+    "_id": "A201",
+    "title": "Aerodynamics Quiz",
+    "course": "RS102"
+  },
+  {
+    "_id": "A202",
+    "title": "Flow Analysis",
+    "course": "RS102"
+  },
+  {
+    "_id": "A203",
+    "title": "Heating Analysis",
+    "course": "RS102"
+  },
+  {
+    "_id": "A301",
+    "title": "Structural Design Task",
+    "course": "RS103"
+  },
+  {
+    "_id": "A302",
+    "title": "Orbital Calculations",
+    "course": "RS103"
+  },
+  {
+    "_id": "A303",
+    "title": "Systems Engineering Exam",
+    "course": "RS103"
+  },
+  {
+    "_id": "A401",
+    "title": "Hydrocarbon Structure Analysis",
+    "course": "RS104"
+  },
+  {
+    "_id": "A402",
+    "title": "Organic Synthesis Project",
+    "course": "RS104"
+  },
+  {
+    "_id": "A403",
+    "title": "Functional Group Identification",
+    "course": "RS104"
+  },
+  {
+    "_id": "A501",
+    "title": "Coordination Compound Study",
+    "course": "RS105"
+  },
+  {
+    "_id": "A502",
+    "title": "Organometallic Reaction Analysis",
+    "course": "RS105"
+  },
+  {
+    "_id": "A503",
+    "title": "Bioinorganic Chemistry Report",
+    "course": "RS105"
+  },
+  {
+    "_id": "A601",
+    "title": "Thermodynamic Cycle Calculation",
+    "course": "RS106"
+  },
+  {
+    "_id": "A602",
+    "title": "Reaction Rate Experiment",
+    "course": "RS106"
+  },
+  {
+    "_id": "A603",
+    "title": "Quantum Chemistry Problem Set",
+    "course": "RS106"
+  }
+]
