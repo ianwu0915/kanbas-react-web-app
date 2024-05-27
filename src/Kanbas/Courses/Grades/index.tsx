@@ -5,8 +5,29 @@ import { LiaFileImportSolid, LiaFileExportSolid } from "react-icons/lia";
 import './style.css'; // Import the custom CSS
 import SearchBar from "./SearchBar";
 import { CiFilter } from "react-icons/ci";
+import { enrollments, grades, assignments, users } from "../../Database";
+import { useParams } from "react-router-dom";
+import { couldStartTrivia } from "typescript";
+
+const getStudentName = (uid: string) => {
+  const user = users.find(user => user._id === uid);
+  return user ? `${user.firstName} ${user.lastName}` : 'N/A';
+} 
+
+const getGradeForStudent = (uid: string, aid: string) => {
+  const grade = grades.find(grade => grade.student === uid && grade.assignment === aid);
+  return grade ? `${grade.grade}%` : 'N/A';
+}
 
 export default function Grades() {
+
+  const { cid } = useParams();
+
+  // 課程所有作業
+  const allassignments = assignments.filter((assignment) => assignment.course === cid);
+  // 參與的人
+  const courseEnrollments = enrollments.filter((enrollment) => enrollment.course === cid);
+
   return (
     <div className="container my-4">
       <div className="d-flex justify-content-end mb-3">
@@ -36,62 +57,21 @@ export default function Grades() {
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>Student Name</th>
-              <th>A1 SETUP<br />Out of 100</th>
-              <th>A2 HTML<br />Out of 100</th>
-              <th>A3 CSS<br />Out of 100</th>
-              <th>A4 BOOTSTRAP<br />Out of 100</th>
+              <th className ="text-start ps-4">Student Name</th>
+              {allassignments.map((assignment) => (
+              <th>{assignment.title}</th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td className="text-start text-danger ps-4">Jane Adams</td>
-              <td>100%</td>
-              <td>96.67%</td>
-              <td>92.18%</td>
-              <td>66.22%</td>
-            </tr>
-            <tr>
-              <td className="text-start text-danger ps-4">Christina Allen</td>
-              <td>100%</td>
-              <td>100%</td>
-              <td>100%</td>
-              <td>100%</td>
-            </tr>
-            <tr>
-              <td className="text-start text-danger ps-4">Samreen Ansari</td>
-              <td>100%</td>
-              <td>100%</td>
-              <td>100%</td>
-              <td>100%</td>
-            </tr>
-            <tr>
-              <td className="text-start text-danger ps-4">Han Bao</td>
-              <td>100%</td>
-              <td>100%</td>
-              <td>
-                <Form.Control
-                  type="text"
-                  defaultValue="88.03"
-                  className="form-control text-center"
-                />
-              </td>
-              <td>98.99%</td>
-            </tr>
-            <tr>
-              <td className="text-start text-danger ps-4">Mahi Sai Srinivas Bobbili</td>
-              <td>100%</td>
-              <td>96.67%</td>
-              <td>98.37%</td>
-              <td>100%</td>
-            </tr>
-            <tr>
-              <td className="text-start text-danger ps-4">Siran Cao</td>
-              <td>100%</td>
-              <td>100%</td>
-              <td>100%</td>
-              <td>100%</td>
-            </tr>
+            {courseEnrollments.map((enrollment) => (
+              <tr>
+                <td className="text-start text-danger ps-4">{getStudentName(enrollment.user)}</td>
+                {allassignments.map((assignment) => (
+                  <td>{getGradeForStudent(enrollment.user, assignment._id)}</td>
+                ))}
+              </tr>
+            ))}
           </tbody>
         </Table>
       </div>
