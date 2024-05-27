@@ -69,66 +69,71 @@ export default function AssignmentEditor() {
             Submission Type
           </label>
         </div>
-        <div className="col-md-8">
-          <select id="wd-submission-type" className="form-select">
-            <option value="Online">Online</option>
-            {/* Add other submission types as needed */}
-          </select>
-          <div className="border p-3 mt-2">
-            <label className="form-label">Online Entry Options</label>
-            <div className="form-check">
-              <input
-                type="checkbox"
-                id="wd-text-entry"
-                className="form-check-input"
-              />
-              <label htmlFor="wd-text-entry" className="form-check-label">
-                Text Entry
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                type="checkbox"
-                id="wd-website-url"
-                className="form-check-input"
-                defaultChecked
-              />
-              <label htmlFor="wd-website-url" className="form-check-label">
-                Website URL
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                type="checkbox"
-                id="wd-media-recordings"
-                className="form-check-input"
-              />
-              <label htmlFor="wd-media-recordings" className="form-check-label">
-                Media Recordings
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                type="checkbox"
-                id="wd-student-annotation"
-                className="form-check-input"
-              />
-              <label
-                htmlFor="wd-student-annotation"
-                className="form-check-label"
-              >
-                Student Annotation
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                type="checkbox"
-                id="wd-file-upload"
-                className="form-check-input"
-              />
-              <label htmlFor="wd-file-upload" className="form-check-label">
-                File Uploads
-              </label>
+        <div className=" col-md-8">
+          <div className="border p-3">
+            <select id="wd-submission-type" className="form-select">
+              <option value="Online">Online</option>
+              {/* Add other submission types as needed */}
+            </select>
+            <div className="p-1 mt-2">
+              <label className="form-label">Online Entry Options</label>
+              <div className="form-check">
+                <input
+                  type="checkbox"
+                  id="wd-text-entry"
+                  className="form-check-input"
+                />
+                <label htmlFor="wd-text-entry" className="form-check-label">
+                  Text Entry
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  type="checkbox"
+                  id="wd-website-url"
+                  className="form-check-input"
+                  defaultChecked
+                />
+                <label htmlFor="wd-website-url" className="form-check-label">
+                  Website URL
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  type="checkbox"
+                  id="wd-media-recordings"
+                  className="form-check-input"
+                />
+                <label
+                  htmlFor="wd-media-recordings"
+                  className="form-check-label"
+                >
+                  Media Recordings
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  type="checkbox"
+                  id="wd-student-annotation"
+                  className="form-check-input"
+                />
+                <label
+                  htmlFor="wd-student-annotation"
+                  className="form-check-label"
+                >
+                  Student Annotation
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  type="checkbox"
+                  id="wd-file-upload"
+                  className="form-check-input"
+                />
+                <label htmlFor="wd-file-upload" className="form-check-label">
+                  File Uploads
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -141,7 +146,7 @@ export default function AssignmentEditor() {
           </label>
         </div>
         <div className="col-md-8">
-          <div className="border p-3 mt-2">
+          <div className="border p-4 mt-2">
             <div className="row mb-3">
               <div className="col-md-2">
                 <label htmlFor="wd-assign-to" className="form-label">

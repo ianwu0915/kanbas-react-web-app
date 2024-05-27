@@ -71,7 +71,6 @@ export default function CourseStatus() {
         <IoIosNotifications className="me-2 fs-5" />
         View Course Notifications
       </button>
-      {/* Complete the rest of the buttons */}
     </div>
   );
 }

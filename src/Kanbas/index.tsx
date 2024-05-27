@@ -10,7 +10,7 @@ export default function Kanbas() {
         <div className="d-none d-md-block bg-black">
           <KanbasNavigation />
         </div>
-        <div className="flex-fill p-4">
+        <div className="flex-fill p-4 ps-5 ">
           <Routes>
             <Route path="/" element={<Navigate to="Dashboard" />} />
             <Route path="Dashboard" element={<Dashboard />} />

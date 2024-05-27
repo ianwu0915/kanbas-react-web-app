@@ -350,10 +350,10 @@ export default function Lab2() {
       <div id="wd-bs-grid-system">
         <h2>Grid system</h2>
         <div className="row">
-          <div className="col bg-danger text-white">
+          <div className="col col-sm bg-danger text-white">
             <h3>Left half</h3>
           </div>
-          <div className="col bg-primary text-white">
+          <div className="col col-sm bg-primary text-white">
             <h3>Right half</h3>
           </div>
         </div>
@@ -369,6 +369,7 @@ export default function Lab2() {
           <div className="col-2 bg-dark text-white">
             <h3>Sidebar</h3>
           </div>
+          {/* <div className="w-100"></div> */}
           <div className="col-8 bg-secondary text-white">
             <h3>Main content</h3>
           </div>
@@ -831,9 +832,6 @@ export default function Lab2() {
     </div>
   </div>
 </div>
-
-
-
 
     </div>
   );

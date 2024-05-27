@@ -1,16 +1,3 @@
-// export default function KanbasNavigation() {
-//     return (
-//       <ul id="wd-kanbas-navigation">
-//         <li><a id="wd-neu-link" target="_blank" href="https://www.northeastern.edu/">
-//           <img src="/images/NEU.png" width="75px" /></a></li>
-//         <li><a id="wd-account-link" href="#/Kanbas/Account">Account</a></li>
-//         <li><a id="wd-dashboard-link" href="#/Kanbas/Dashboard">Dashboard</a></li>
-//         <li><a id="wd-course-link" href="#/Kanbas/Courses">Courses</a></li>
-//         <li><a id="wd-calendar-link" href="#/Kanbas/Calendar">Calendar</a></li>
-//         <li><a id="wd-inbox-link" href="#/Kanbas/Inbox">Inbox</a></li>
-//         <li><a id="wd-labs-link" href="#/Labs">Labs</a></li>
-//       </ul>
-//   );}
 import { AiOutlineDashboard } from "react-icons/ai";
 import { IoCalendarOutline } from "react-icons/io5";
 import { LiaBookSolid, LiaCogSolid } from "react-icons/lia";
@@ -36,7 +23,7 @@ export default function KanbasNavigation() {
       >
         <FaRegCircleUser className="fs-1 text text-white" />
         <br />
-        Account{" "}
+        Account
       </a>
 
       <a
@@ -47,7 +34,7 @@ export default function KanbasNavigation() {
       >
         <AiOutlineDashboard className="fs-1 text-danger" />
         <br />
-        Dashboard{" "}
+        Dashboard
       </a>
       <a
         id="wd-course-link"
@@ -57,7 +44,7 @@ export default function KanbasNavigation() {
       >
         <LiaBookSolid className="fs-1 text-danger" />
         <br />
-        Courses{" "}
+        Courses
       </a>
       <a
         id="wd-calendar-link"
@@ -67,7 +54,7 @@ export default function KanbasNavigation() {
       >
         <FaCalendarAlt className="fs-1 text-danger" />
         <br />
-        Calendar{" "}
+        Calendar
       </a>
       <a
         id="wd-inbox-link"
@@ -77,17 +64,17 @@ export default function KanbasNavigation() {
       >
         <FaInbox className="fs-1 text-danger" />
         <br />
-        Inbox{" "}
+        Inbox
       </a>
       <a
         id="wd-labs-link"
-        href="#/Kanbas/Labs"
+        href="#/Labs"
         className="list-group-item text-white
                    bg-black text-center border-0"
       >
         <LiaCogSolid  className="fs-1 text-danger" />
         <br />
-        Labs{" "}
+        Labs
       </a>
     </div>
   );

@@ -26,7 +26,6 @@ export default function Courses() {
             <Route path="Assignments" element={<Assignments />} />
             <Route path="Assignments/:id" element={<Editor />} />
             <Route path="Grades" element={<Grades />} />
-            
           </Routes>
         </div>
       </div>
