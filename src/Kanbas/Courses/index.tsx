@@ -29,7 +29,7 @@ export default function Courses() {
             <Route path="Home" element={<Home />} />
             <Route path="Modules" element={<Modules />} />
             <Route path="Assignments" element={<Assignments />} />
-            <Route path="Assignments/:id" element={<Editor />} />
+            <Route path="Assignments/:aid" element={<Editor />} />
             <Route path="Grades" element={<Grades />} />
           </Routes>
         </div>

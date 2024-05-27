@@ -11,6 +11,7 @@ import LessonControlButtons from "./LessonControlButtons";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { assignments } from "../../Database";
 import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 
 export default function Assignments() {
   const { cid } = useParams();
@@ -63,16 +64,16 @@ export default function Assignments() {
                   style={{ color: "green" }}
                 />
                 <div className="flex-grow-1 w-50">
-                  <a
+                  <Link
                     className="wd-assignment-link d-block"
-                    href="#/Kanbas/Courses/1234/Assignments/123"
+                    to={assignment._id}
                   >
                     {assignment.title}
-                  </a>
+                  </Link>
                   <p className="mb-0">
                     <span className="text-danger">Multiple Modules</span> |{" "}
-                    <strong>Not available until</strong> May 20 at 12:00am |{" "}
-                    <strong>Due</strong> May 27 at 11:59pm | 100 pts
+                    <strong>Not available until</strong> {assignment.startDate} at {assignment.startTime} |{" "}
+                    <strong>Due</strong> {assignment.dueDate} at {assignment.dueTime} | {assignment.points} pts
                   </p>
                 </div>
                 <LessonControlButtons />

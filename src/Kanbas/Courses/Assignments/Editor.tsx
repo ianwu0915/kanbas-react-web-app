@@ -1,13 +1,19 @@
 import React from "react";
+import { useParams } from "react-router";
+import { assignments } from "../../Database";
+import { Link } from "react-router-dom";
 
 export default function AssignmentEditor() {
+  const { cid, aid } = useParams();
+  const assignment = assignments.find((assignment) => assignment._id === aid);
+
   return (
     <div id="wd-assignments-editor" className="container my-4">
       <div className="mb-4">
         <label htmlFor="wd-name" className="form-label">
-          Assignment Name
+          Assingment Name 
         </label>
-        <input id="wd-name" className="form-control" value="A1 - ENV + HTML" />
+        <input id="wd-name" className="form-control" value={assignment && assignment.title} />
       </div>
 
       <div className="mb-4">
@@ -15,12 +21,7 @@ export default function AssignmentEditor() {
           Description
         </label>
         <textarea id="wd-description" className="form-control" rows={5}>
-          The assignment is available online. Submit a link to the landing page
-          of your Web application running on Netlify. The landing page should
-          include the following: Your full name and section, Links to each of
-          the lab assignments, Link to the Kanbas application, Links to all
-          relevant source code repositories. The Kanbas application should
-          include a link to navigate back to the landing page.
+          {assignment && assignment.description}
         </textarea>
       </div>
 
@@ -31,7 +32,7 @@ export default function AssignmentEditor() {
           </label>
         </div>
         <div className="col-md-8">
-          <input id="wd-points" className="form-control" value={100} />
+          <input id="wd-points" className="form-control" value={assignment?.points} />
         </div>
       </div>
 
@@ -169,10 +170,10 @@ export default function AssignmentEditor() {
               </div>
               <div className="col-md-10">
                 <input
-                  type="datetime-local"
+                  type="text"
                   id="wd-due-date"
                   className="form-control"
-                  value="2024-05-13T23:59"
+                  value={`${assignment?.dueDate}, ${assignment?.dueTime}`} 
                 />
               </div>
             </div>
@@ -184,10 +185,10 @@ export default function AssignmentEditor() {
               </div>
               <div className="col-md-10">
                 <input
-                  type="datetime-local"
+                  type="text"
                   id="wd-available-from"
                   className="form-control"
-                  value="2024-05-06T00:00"
+                  value={`${assignment?.startDate}, ${assignment?.startTime}`}
                 />
               </div>
             </div>
@@ -199,13 +200,20 @@ export default function AssignmentEditor() {
               </div>
               <div className="col-md-10">
                 <input
-                  type="datetime-local"
+                  type="text"
                   id="wd-available-until"
                   className="form-control"
-                  value="2024-05-20T00:00"
+                  value={`${assignment?.dueDate}, ${assignment?.dueTime}`}
                 />
               </div>
             </div>
+            <Link to={`/Kanbas/Courses/${cid}/Assignments`} className="btn btn-danger float-end">
+              Save
+            </Link>
+            <Link to={`/Kanbas/Courses/${cid}/Assignments`} className="btn btn-light me-2 float-end">
+              Cancel
+            </Link>
+          
           </div>
         </div>
       </div>
