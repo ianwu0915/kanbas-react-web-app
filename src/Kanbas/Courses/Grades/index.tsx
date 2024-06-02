@@ -7,7 +7,6 @@ import SearchBar from "./SearchBar";
 import { CiFilter } from "react-icons/ci";
 import { enrollments, grades, assignments, users } from "../../Database";
 import { useParams } from "react-router-dom";
-import { couldStartTrivia } from "typescript";
 
 const getStudentName = (uid: string) => {
   const user = users.find(user => user._id === uid);
