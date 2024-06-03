@@ -10,11 +10,31 @@ import { MdOutlineAssignment } from "react-icons/md";
 import LessonControlButtons from "./LessonControlButtons";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { assignments } from "../../Database";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import AssignmentEditor from "./Editor";
 
 export default function Assignments() {
   const { cid } = useParams();
+  const navigate = useNavigate();
+  const [assignment, setAssignment] = useState({
+    title: "",
+    description: "",
+    points: 100,
+    startDate: "",
+    dueDate: "",
+  });
+
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+
+  const handleNavigate = (assignment: any) => {
+    navigate(`/Kanbas/Courses/${cid}/Assignments/Editor/${assignment._id}`, {
+      state: { assignment },
+    });
+  };
+
   return (
     <div id="wd-assignments" className="me-4">
       <div className="d-flex justify-content-between mb-5 ms-5">
@@ -32,10 +52,15 @@ export default function Assignments() {
             <BsPlus className="fs-4 mb-1" />
             Group
           </button>
-          <button id="wd-add-assignment" className="btn btn-danger float-end">
+          <Link
+            to="/Kanbas/Courses/RS101/Assignments/Editor"
+            className="btn btn-danger float-end"
+            // data-bs-toggle="modal"
+            // data-bs-target="#wd-add-assignment-dialog"
+          >
             <BsPlus className="fs-4 mb-1" />
             Assignment
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -53,8 +78,8 @@ export default function Assignments() {
           <IoEllipsisVertical className="fs-4" />
         </div>
         {assignments
-          .filter((assignment) => assignment.course === cid)
-          .map((assignment) => (
+          .filter((assignment: any) => assignment.course === cid)
+          .map((assignment: any) => (
             <li className="wd-assignment-list-item list-group-item">
               <div className="d-flex align-items-center">
                 <BsGripVertical className="me-2 fs-5" />
@@ -64,16 +89,18 @@ export default function Assignments() {
                   style={{ color: "green" }}
                 />
                 <div className="flex-grow-1 w-50">
-                  <Link
-                    className="wd-assignment-link d-block"
-                    to={assignment._id}
+                  <button
+                    className="wd-assignment-link d-block btn btn-link text-start p-0"
+                    onClick={() => handleNavigate(assignment)}
                   >
                     {assignment.title}
-                  </Link>
+                  </button>
                   <p className="mb-0">
                     <span className="text-danger">Multiple Modules</span> |{" "}
-                    <strong>Not available until</strong> {assignment.startDate} at {assignment.startTime} |{" "}
-                    <strong>Due</strong> {assignment.dueDate} at {assignment.dueTime} | {assignment.points} pts
+                    <strong>Not available until</strong> {assignment.startDate}{" "}
+                    at {assignment.startTime} | <strong>Due</strong>{" "}
+                    {assignment.dueDate} at {assignment.dueTime} |{" "}
+                    {assignment.points} pts
                   </p>
                 </div>
                 <LessonControlButtons />
@@ -81,6 +108,11 @@ export default function Assignments() {
             </li>
           ))}
       </ul>
+      {/* <AssignmentEditor
+        dialogTitle="Add Assignment"
+        assignment={assignment}
+        setAssignment={setAssignment}
+      /> */}
     </div>
   );
 }
