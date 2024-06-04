@@ -103,7 +103,7 @@ export default function Assignments() {
                     {assignment.points} pts
                   </p>
                 </div>
-                <LessonControlButtons />
+                <LessonControlButtons assignmentId={assignment._id} />
               </div>
             </li>
           ))}
