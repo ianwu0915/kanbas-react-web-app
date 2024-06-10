@@ -1,6 +1,8 @@
-import { addAssignment } from "./AssignmentsReducer";
-import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router";
+import React, { useEffect } from "react";
+import { useParams, useLocation } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { addAssignment, updateAssignment } from "./AssignmentsReducer";
 
 export default function AssignmentEditor({
   dialogTitle,
@@ -23,89 +25,164 @@ export default function AssignmentEditor({
     dueDate: string;
   }) => void;
 }) {
-  const { cid } = useParams();
+  const { cid, aid } = useParams();
+  const location = useLocation();
   const dispatch = useDispatch();
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
 
-  return (
-    <div
-      id="wd-add-assignment-dialog"
-      className="modal fade"
-      data-bs-backdrop="static"
-      data-bs-keyboard="false"
-    >
-      <div className="modal-dialog">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h1 className="modal-title fs-5" id="staticBackdropLabel">
-              {dialogTitle}{" "}
-            </h1>
-            <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="modal"
-            ></button>
-          </div>
-          <div className="modal-body">
-            <form>
-              <div className="form-group">
-                <label htmlFor="wd-assignment-title" className="form-label">
-                  Assignment Title
-                </label>
-                <input
-                  id="wd-assignment-title"
-                  type="text"
-                  className="form-control"
-                  value={assignment.title}
-                  placeholder="New Assignment Name"
-                  onChange={(e) =>
-                    setAssignment({ ...assignment, title: e.target.value })
-                  }
-                />
-              </div>
-              <div className="form-group mt-3">
-                <label htmlFor="wd-assignment-title" className="form-label">
-                  Assignment Description
-                </label>
-                <input
-                  className="form-control"
-                  value={assignment.description}
-                  placeholder="New assignment Description"
-                  onChange={(e) =>
-                    setAssignment({
-                      ...assignment,
-                      description: e.target.value,
-                    })
-                  }
-                />
-              </div>
+  // if (aid) {
+  //   const foundAssignment = assignments.find((assignment: any) => assignment._id === aid);
+  //   if (foundAssignment) {
+  //     setAssignment(foundAssignment);
+  //   }
+  //   else if (location.state && location.state.assignment) {
+  //     setAssignment(location.state.assignment);
+  //   }
+  // }
 
-              <div className="form-group mt-3">
-                <label htmlFor="wd-assignment-title" className="form-label">
-                  Points
+  // useEffect to set the assignment from the state 
+  useEffect(() => {
+    if (aid) {
+      const foundAssignment = assignments.find((assignment: any) => assignment._id === aid);
+      if (foundAssignment) {
+        setAssignment(foundAssignment);
+      }
+    // } else if (location.state && location.state.assignment) {
+    //   setAssignment(location.state.assignment);
+    }
+  }, [aid, location.state, assignments, setAssignment]);
+
+  // handleSave function to dispatch the addAssignment or updateAssignment action
+  const handleSave = () => {
+    if (aid) {
+      dispatch(updateAssignment({ ...assignment, course: cid, _id: aid }));
+      setAssignment({
+        title: "",
+        description: "",
+        points: 100,
+        startDate: "",
+        dueDate: "",
+      })
+    } else {
+      dispatch(addAssignment({ ...assignment, course: cid }));
+    }
+  };
+
+  return (
+    <div id="wd-assignments-editor" className="container my-4">
+      <h2 className="mb-4">{dialogTitle}</h2>
+      <div className="mb-4">
+        <label htmlFor="wd-name" className="form-label">
+          Assignment Name
+        </label>
+        <input
+          id="wd-name"
+          className="form-control"
+          value={assignment.title}
+          placeholder="New Assignment Name"
+          onChange={(e) =>
+            setAssignment({ ...assignment, title: e.target.value })
+          }
+        />
+      </div>
+
+      <div className="mb-4">
+        <label htmlFor="wd-description" className="form-label">
+          Description
+        </label>
+        <textarea
+          id="wd-description"
+          className="form-control"
+          rows={5}
+          placeholder="New assignment Description"
+          value={assignment.description}
+          onChange={(e) =>
+            setAssignment({
+              ...assignment,
+              description: e.target.value,
+            })
+          }
+        />
+      </div>
+
+      <div className="row mb-3">
+        <div className="col-md-4 text-md-end">
+          <label htmlFor="wd-points" className="form-label">
+            Points
+          </label>
+        </div>
+        <div className="col-md-8">
+          <input
+            id="wd-points"
+            className="form-control"
+            value={assignment.points}
+            placeholder="100"
+            onChange={(e) =>
+              setAssignment({
+                ...assignment,
+                points: parseInt(e.target.value),
+              })
+            }
+          />
+        </div>
+      </div>
+
+      <div className="row mb-3">
+        <div className="col-md-4 text-md-end">
+          <label htmlFor="wd-assign-section" className="form-label">
+            Assign
+          </label>
+        </div>
+        <div className="col-md-8">
+          <div className="border p-5 mt-2 mb-2">
+            <div className="row mb-3">
+              <div className="col-md-2">
+                <label htmlFor="wd-assign-to" className="form-label">
+                  Assign to
                 </label>
+              </div>
+              <div className="col-md-10">
                 <input
+                  id="wd-assign-to"
                   className="form-control"
-                  type="number"
-                  value={assignment.points}
-                  placeholder="100"
+                  value="Everyone"
+                  readOnly
+                />
+              </div>
+            </div>
+            <div className="row mb-3">
+              <div className="col-md-2">
+                <label htmlFor="wd-due-date" className="form-label">
+                  Due
+                </label>
+              </div>
+              <div className="col-md-10">
+                <input
+                  type="date"
+                  id="wd-due-date"
+                  className="form-control"
+                  value={assignment.dueDate}
                   onChange={(e) =>
                     setAssignment({
                       ...assignment,
-                      points: parseInt(e.target.value),
+                      dueDate: e.target.value,
                     })
                   }
                 />
               </div>
-              <div className="form-group mt-3">
-                <label htmlFor="wd-assignment-title" className="form-label">
+            </div>
+            <div className="row mb-3">
+              <div className="col-md-2">
+                <label htmlFor="wd-available-from" className="form-label">
                   Available from
                 </label>
+              </div>
+              <div className="col-md-10">
                 <input
-                  className="form-control"
                   type="date"
+                  id="wd-available-from"
+                  className="form-control"
                   value={assignment.startDate}
-                  placeholder="100"
                   onChange={(e) =>
                     setAssignment({
                       ...assignment,
@@ -114,49 +191,35 @@ export default function AssignmentEditor({
                   }
                 />
               </div>
-              <div className="form-group mt-3">
-                <label htmlFor="wd-assignment-title" className="form-label">
-                  Due at
+            </div>
+            <div className="row mb-3">
+              <div className="col-md-2">
+                <label htmlFor="wd-available-until" className="form-label">
+                  Until
                 </label>
+              </div>
+              <div className="col-md-10">
                 <input
-                  className="form-control"
                   type="date"
+                  id="wd-available-until"
+                  className="form-control"
                   value={assignment.dueDate}
-                  placeholder="100"
-                  onChange={(e) => {
-                    
-                    setAssignment({
-                      ...assignment,
-                      dueDate: e.target.value,
-                    });
-                }
-                  }
                 />
               </div>
-            </form>
-          </div>
-
-          <div className="modal-footer">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              data-bs-dismiss="modal"
+            </div>
+            <Link
+              onClick={handleSave}
+              to={`/Kanbas/Courses/${cid}/Assignments`}
+              className="btn btn-danger float-end"
             >
-              Cancel{" "}
-            </button>
-            <button
-              onClick={() => {
-                dispatch(addAssignment({ ...assignment, course: cid }));
-                console.log(assignment);
-                console.log(assignments);
-                // setAssignment({title: "", description: "", points: 0, "startDate": new Date(), dueDate: new Date()});
-              }}
-              type="button"
-              data-bs-dismiss="modal"
-              className="btn btn-danger"
+              Save
+            </Link>
+            <Link
+              to={`/Kanbas/Courses/${cid}/Assignments`}
+              className="btn btn-light me-2 float-end"
             >
-              Add assignment
-            </button>
+              Cancel
+            </Link>
           </div>
         </div>
       </div>

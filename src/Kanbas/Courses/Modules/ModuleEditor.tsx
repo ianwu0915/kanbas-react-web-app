@@ -1,4 +1,4 @@
-import { addModule } from "./reducer";
+import { addModule } from "./ModuleReducer";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router";
 

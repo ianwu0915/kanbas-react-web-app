@@ -2,7 +2,7 @@ import CoursesNavigation from "./Navigation";
 import Modules from "./Modules";
 import Home from "./Home";
 import Assignments from "./Assignments";
-import Editor from "./Assignments/Editor";
+import Editor from "./Assignments/AssignmentEditor";
 import Grades from "./Grades";
 import { Navigate, Route, Routes, useParams, useLocation } from "react-router";
 import { FaAlignJustify } from "react-icons/fa";
@@ -22,7 +22,6 @@ export default function Courses({ courses }: { courses: any[] }) {
   const { cid, aid } = useParams();
   const course = courses.find((course) => course._id === cid);
   const { pathname } = useLocation();
-
 
   return (
     <div id="wd-courses">
@@ -51,13 +50,16 @@ export default function Courses({ courses }: { courses: any[] }) {
                 />
               }
             />
-            <Route path="Assignments/Editor/:aid" element={
+            <Route
+              path="Assignments/Editor/:aid"
+              element={
                 <Editor
                   dialogTitle="Edit Assignment"
                   assignment={assignment}
                   setAssignment={setAssignment}
                 />
-              } />
+              }
+            />
             <Route path="Grades" element={<Grades />} />
           </Routes>
         </div>

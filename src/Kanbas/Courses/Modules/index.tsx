@@ -1,4 +1,9 @@
-import { addModule, editModule, updateModule, deleteModule } from "./reducer";
+import {
+  addModule,
+  editModule,
+  updateModule,
+  deleteModule,
+} from "./ModuleReducer";
 import { useSelector, useDispatch } from "react-redux";
 import ModulesControls from "./ModulesControls";
 import ModuleControlButtons from "./ModuleControlButtons";
@@ -17,7 +22,8 @@ export default function Modules() {
   return (
     <div id="wd-modules" className="me-4">
       <ModulesControls
-        moduleName={moduleName} setModuleName={setModuleName}
+        moduleName={moduleName}
+        setModuleName={setModuleName}
         // addModule={() => {
         //   dispatch(addModule({ name: moduleName, course: cid }));
         //   setModuleName("");
@@ -53,10 +59,10 @@ export default function Modules() {
                 )}
                 <ModuleControlButtons
                   moduleId={module._id}
-                  // deleteModule={(moduleId : any) => { 
+                  // deleteModule={(moduleId : any) => {
                   //   dispatch(deleteModule(moduleId));
                   // }
-                  
+
                   // editModule={(moduleId : any
                   //   ) => dispatch(editModule(moduleId))}
                 />

@@ -1,31 +1,24 @@
 import "./style.css";
-import { TiDocumentText } from "react-icons/ti";
-import {
-  BsThreeDots,
-  BsPlus,
-  BsChevronDown,
-  BsGripVertical,
-} from "react-icons/bs";
+import { BsPlus, BsChevronDown, BsGripVertical } from "react-icons/bs";
 import { MdOutlineAssignment } from "react-icons/md";
 import LessonControlButtons from "./LessonControlButtons";
 import { IoEllipsisVertical } from "react-icons/io5";
-import { assignments } from "../../Database";
 import { useParams, useNavigate } from "react-router";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import AssignmentEditor from "./Editor";
+import AssignmentEditor from "./AssignmentEditor";
 
 export default function Assignments() {
   const { cid } = useParams();
   const navigate = useNavigate();
-  const [assignment, setAssignment] = useState({
-    title: "",
-    description: "",
-    points: 100,
-    startDate: "",
-    dueDate: "",
-  });
+  // const [assignment, setAssignment] = useState({
+  //   title: "",
+  //   description: "",
+  //   points: 100,
+  //   startDate: "",
+  //   dueDate: "",
+  // });
 
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
 
@@ -88,10 +81,13 @@ export default function Assignments() {
                   size={23}
                   style={{ color: "green" }}
                 />
-                <div className="flex-grow-1 w-50">
+                <div
+                  className="flex-grow-1 w-50"
+                  onClick={() => handleNavigate(assignment)}
+                >
                   <button
                     className="wd-assignment-link d-block btn btn-link text-start p-0"
-                    onClick={() => handleNavigate(assignment)}
+                    // onClick={() => handleNavigate(assignment)}
                   >
                     {assignment.title}
                   </button>
