@@ -45,8 +45,6 @@ export default function AssignmentEditor({
     dispatch(updateAssignment(assignment));
   }
 
-
-  // useEffect to set the assignment from the state
   useEffect(() => {
     if (aid) {
       const foundAssignment = assignments.find(
