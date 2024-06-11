@@ -40,6 +40,12 @@ export default function AssignmentEditor({
     dispatch(addAssignment(newAssignment));
   };
 
+  const saveAssignment = async (assignment: any) => {
+    const status = await client.updateAssignment(assignment);
+    dispatch(updateAssignment(assignment));
+  }
+
+
   // useEffect to set the assignment from the state
   useEffect(() => {
     if (aid) {
@@ -57,7 +63,8 @@ export default function AssignmentEditor({
   // handleSave function to dispatch the addAssignment or updateAssignment action
   const handleSave = () => {
     if (aid) {
-      dispatch(updateAssignment({ ...assignment, course: cid, _id: aid }));
+      // dispatch(updateAssignment({ ...assignment, course: cid, _id: aid }));
+      saveAssignment({ ...assignment, course: cid, _id: aid });
       setAssignment({
         title: "",
         description: "",

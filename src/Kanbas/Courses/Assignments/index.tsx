@@ -32,6 +32,8 @@ export default function Assignments() {
     console.log("the new assignments:", assignments);
   }
 
+  
+
   const handleNavigate = (assignment: any) => {
     navigate(`/Kanbas/Courses/${cid}/Assignments/Editor/${assignment._id}`, {
       state: { assignment },
