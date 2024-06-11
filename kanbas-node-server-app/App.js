@@ -1,12 +1,13 @@
-import express from 'express'  // Import express
-import Hello from './Hello.js'  // Import Hello.js
-import Lab5 from './Lab5/index.js'
+import express from "express";
+import Lab5 from "./Lab5/index.js";
+import CourseRoutes from "./Kanbas/Courses/routes.js";
 import cors from "cors";
+import ModuleRoutes from "./Kanbas/Modules/routes.js";
 
-const app = express()  // Create an express app
-app.use(cors());   
-app.use(express.json()); // Enable JSON parsing
-app.listen(process.env.PORT || 4000) // Start the server on port 4000
-
-Hello(app)
-Lab5(app)
+const app = express();
+app.use(cors());
+app.use(express.json()); // do all your work after this line
+CourseRoutes(app);
+ModuleRoutes(app);
+Lab5(app);
+app.listen(4000);

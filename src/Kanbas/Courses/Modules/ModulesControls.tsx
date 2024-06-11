@@ -3,8 +3,8 @@ import GreenCheckmark from "./GreenCheckmark";
 import { AiOutlineStop } from "react-icons/ai";
 import ModuleEditor from "./ModuleEditor";
 
-export default function ModulesControls({ moduleName, setModuleName}:
-  { moduleName: string; setModuleName: (title: string) => void; }) {
+export default function ModulesControls({ moduleName, setModuleName, addModule}:
+  { moduleName: string; setModuleName: (title: string) => void; addModule: () => void;}) {
   return (
     <div id="wd-modules-controls" className="text-nowrap">
       <button
@@ -82,7 +82,7 @@ export default function ModulesControls({ moduleName, setModuleName}:
       </button>
       
       <ModuleEditor dialogTitle="Add Module" moduleName={moduleName}
-                    setModuleName={setModuleName} />
+                    setModuleName={setModuleName} addNewModule={addModule}/>
 
     </div>
   );

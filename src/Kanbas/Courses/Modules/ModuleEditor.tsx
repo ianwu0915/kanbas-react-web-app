@@ -6,10 +6,12 @@ export default function ModuleEditor({
   dialogTitle,
   moduleName,
   setModuleName,
+  addNewModule,
 }: {
   dialogTitle: string;
   moduleName: string;
   setModuleName: (name: string) => void;
+  addNewModule: () => void;
 }) {
   const { cid } = useParams();
   const dispatch = useDispatch();
@@ -51,7 +53,9 @@ export default function ModuleEditor({
             </button>
             <button
               onClick={() => {
-                dispatch(addModule({ name: moduleName, course: cid }));
+                addNewModule();
+                console.log("course id is:", cid);
+                console.log("module name is:", moduleName);
                 setModuleName("");
               }}
               type="button"
