@@ -4,14 +4,18 @@ import { MdOutlineAssignment } from "react-icons/md";
 import LessonControlButtons from "./LessonControlButtons";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { useParams, useNavigate } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import AssignmentEditor from "./AssignmentEditor";
+import { setAssignments, addAssignment, deleteAssignment, updateAssignment } from "./AssignmentsReducer";
+import * as client from "./client";
+import { useDispatch } from "react-redux";
+
 
 export default function Assignments() {
   const { cid } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   // const [assignment, setAssignment] = useState({
   //   title: "",
   //   description: "",
@@ -22,11 +26,21 @@ export default function Assignments() {
 
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
 
+  const fetchAssignments = async () => {
+    const assignments = await client.findAssignmentsForCourse(cid as string);
+    dispatch(setAssignments(assignments));
+    console.log("the new assignments:", assignments);
+  }
+
   const handleNavigate = (assignment: any) => {
     navigate(`/Kanbas/Courses/${cid}/Assignments/Editor/${assignment._id}`, {
       state: { assignment },
     });
   };
+
+  useEffect(() => {
+    fetchAssignments();
+  }, [assignments.length]);
 
   return (
     <div id="wd-assignments" className="me-4">

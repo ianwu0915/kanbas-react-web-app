@@ -3,6 +3,7 @@ import { useParams, useLocation } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { addAssignment, updateAssignment } from "./AssignmentsReducer";
+import * as client from "./client";
 
 export default function AssignmentEditor({
   dialogTitle,
@@ -30,25 +31,26 @@ export default function AssignmentEditor({
   const dispatch = useDispatch();
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
 
-  // if (aid) {
-  //   const foundAssignment = assignments.find((assignment: any) => assignment._id === aid);
-  //   if (foundAssignment) {
-  //     setAssignment(foundAssignment);
-  //   }
-  //   else if (location.state && location.state.assignment) {
-  //     setAssignment(location.state.assignment);
-  //   }
-  // }
+  const createAssignment = async (assignment: any) => {
+    const newAssignment = await client.createAssignment(
+      cid as string,
+      assignment
+    );
+    console.log("new assignment after create is:", newAssignment);
+    dispatch(addAssignment(newAssignment));
+  };
 
-  // useEffect to set the assignment from the state 
+  // useEffect to set the assignment from the state
   useEffect(() => {
     if (aid) {
-      const foundAssignment = assignments.find((assignment: any) => assignment._id === aid);
+      const foundAssignment = assignments.find(
+        (assignment: any) => assignment._id === aid
+      );
       if (foundAssignment) {
         setAssignment(foundAssignment);
       }
-    // } else if (location.state && location.state.assignment) {
-    //   setAssignment(location.state.assignment);
+      // } else if (location.state && location.state.assignment) {
+      //   setAssignment(location.state.assignment);
     }
   }, [aid, location.state, assignments, setAssignment]);
 
@@ -62,9 +64,9 @@ export default function AssignmentEditor({
         points: 100,
         startDate: "",
         dueDate: "",
-      })
+      });
     } else {
-      dispatch(addAssignment({ ...assignment, course: cid }));
+      createAssignment({ ...assignment, course: cid });
     }
   };
 
