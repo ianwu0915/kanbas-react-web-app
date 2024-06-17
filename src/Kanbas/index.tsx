@@ -10,6 +10,7 @@ import store from "./store";
 import { Provider } from "react-redux";
 import Account from "./Account";
 import Session from "./Account/Session";
+import ProtectedRoute from "./ProtectedRoute";
 
 export default function Kanbas() {
   const [courses, setCourses] = useState<any[]>([]);
@@ -68,6 +69,7 @@ export default function Kanbas() {
               <Route
                 path="Dashboard"
                 element={
+                  <ProtectedRoute>
                   <Dashboard
                     courses={courses}
                     course={course}
@@ -76,11 +78,12 @@ export default function Kanbas() {
                     deleteCourse={deleteCourse}
                     updateCourse={updateCourse}
                   />
+                  </ProtectedRoute>
                 }
               />
               <Route
                 path="Courses/:cid/*"
-                element={<Courses courses={courses} />}
+                element={<ProtectedRoute><Courses courses={courses} /></ProtectedRoute>}
               />
               {/* <Route path="Courses/:cid/*" element={<Courses />} /> */}
               <Route path="Calendar" element={<h1>Calendar</h1>} />
