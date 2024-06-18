@@ -7,6 +7,8 @@ export const fetchAllCourses = async () => {
 };
 
 export const createCourse = async (course: any) => {
+  console.log("course", course);
+  delete course._id;
   const response = await axios.post(COURSES_API, course);
   return response.data;
 };
@@ -17,6 +19,8 @@ export const deleteCourse = async (id: string) => {
 };
 
 export const updateCourse = async (course: any) => {
-  const response = await axios.put(`${COURSES_API}/${course.id}`, course);
+  console.log("course", course.name);
+  const name = course.name;
+  const response = await axios.put(`${COURSES_API}/${name}`, course);
   return response.data;
 };

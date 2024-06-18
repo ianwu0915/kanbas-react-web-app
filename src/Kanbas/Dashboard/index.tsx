@@ -70,6 +70,11 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
         className="form-control mb-2"
         onChange={(e) => setCourse({ ...course, name: e.target.value })}
       />
+        <input
+        value={course.number}
+        className="form-control mb-2"
+        onChange={(e) => setCourse({ ...course, number: e.target.value })}
+      />
       <textarea
         value={course.description}
         className="form-control"
@@ -85,7 +90,7 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
           {courses.map((course) => (
             <div className="wd-dashboard-course col" style={{ width: "300px" }}>
               <Link
-                to={`/Kanbas/Courses/${course._id}/Home`}
+                to={`/Kanbas/Courses/${course.number}/Home`}
                 className="text-decoration-none"
               >
                 <div className="card rounded-3 overflow-hidden">

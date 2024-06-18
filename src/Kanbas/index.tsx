@@ -29,6 +29,8 @@ export default function Kanbas() {
     startDate: "2023-09-10",
     endDate: "2023-12-15",
     description: "New Description",
+    department: "New Department",
+    credits: 4,
   });
 
   const addNewCourse = async () => {
