@@ -34,6 +34,7 @@ export default function Modules() {
   };
 
   const removeModule = async (moduleId: string) => {
+    console.log("removing module with id:", moduleId);
     await client.deleteModule(moduleId);
     dispatch(deleteModule(moduleId));
   };
@@ -53,7 +54,7 @@ export default function Modules() {
         moduleName={moduleName}
         setModuleName={setModuleName}
         addModule={() => {
-          createModule({ name: moduleName, description: ""});
+          createModule({ name: moduleName, description: "", course: cid, lesson: [] });
           setModuleName("");
         }}
       />
@@ -85,9 +86,11 @@ export default function Modules() {
                 )}
                 <ModuleControlButtons
                   moduleId={module._id}
-                  deleteModule={(moduleId) => { removeModule(moduleId); }}
-                  editModule={(moduleId) => dispatch(editModule(moduleId))} 
-                  />
+                  deleteModule={(moduleId) => {
+                    removeModule(moduleId);
+                  }}
+                  editModule={(moduleId) => dispatch(editModule(moduleId))}
+                />
               </div>
               {module.lessons.map((lesson: any) => (
                 <li className="wd-lesson list-group-item p-3 ps-1">
