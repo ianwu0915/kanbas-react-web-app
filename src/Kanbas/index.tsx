@@ -6,15 +6,19 @@ import Courses from "./Courses";
 // import * as db from "./Database";
 import * as client from "./Courses/client";
 import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import store from "./store";
 import { Provider } from "react-redux";
 import Account from "./Account";
 import Session from "./Account/Session";
 import ProtectedRoute from "./ProtectedRoute";
 import RegisterCourses from "./Dashboard/RegisterCourses";
+import { setCurrentUser } from "./Account/reducer";
 
 export default function Kanbas() {
+  const dispatch = useDispatch();
   const [courses, setCourses] = useState<any[]>([]);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
   const fetchCourses = async () => {
     const courses = await client.fetchAllCourses();
     setCourses(courses);
@@ -36,12 +40,25 @@ export default function Kanbas() {
 
   const addNewCourse = async () => {
     const newCourse = await client.createCourse(course);
+    console.log("newCourse", newCourse);
+    // add the new course to the faculty's courses list 
+
+    const response = await client.registerCourse(currentUser._id, newCourse._id);
+    console.log("response", response);
     setCourses([...courses, newCourse]);
+
+    const newUserCourses = [...currentUser.enrolledCourses, response];
+    const newCurrentUser = { ...currentUser, enrolledCourses: newUserCourses };
+    dispatch(setCurrentUser(newCurrentUser));
   };
 
   const deleteCourse = async (courseId: string) => {
     await client.deleteCourse(courseId);
     setCourses(courses.filter((c) => c._id !== courseId));
+    const newUserCourses = currentUser.enrolledCourses.filter((c: any) => c.courseId !== courseId);
+    const newCurrentUser = { ...currentUser, enrolledCourses: newUserCourses };
+    dispatch(setCurrentUser(newCurrentUser));
+
   };
 
   const updateCourse = async () => {
@@ -55,6 +72,11 @@ export default function Kanbas() {
         }
       })
     );
+  
+    const newUserCourses = currentUser.enrolledCourses.map((c: any) => { c.courseId === course._id ? course : c });
+    const newCurrentUser = { ...currentUser, enrolledCourses: newUserCourses };
+    dispatch(setCurrentUser(newCurrentUser));
+
   };
 
   return (

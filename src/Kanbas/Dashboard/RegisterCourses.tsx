@@ -1,11 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as client from "../Courses/client";
 import { useSelector, useDispatch } from "react-redux";
+
 import { setCurrentUser } from "../Account/reducer";
 import randomImage from "../RandomImage";
 
 export default function RegisterCourses({ courses }: { courses: any[] }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const handleEnrollCourse = async (courseId: string) => {
     console.log("Enroll course clicked", courseId);
@@ -24,6 +27,8 @@ export default function RegisterCourses({ courses }: { courses: any[] }) {
     const newUserCourses = [...currentUser.enrolledCourses, response];
     const newCurrentUser = { ...currentUser, enrolledCourses: newUserCourses };
     dispatch(setCurrentUser(newCurrentUser));
+    navigate("/Kanbas/Dashboard");
+    
   };
 
   return (

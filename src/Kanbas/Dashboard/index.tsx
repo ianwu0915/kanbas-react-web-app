@@ -40,7 +40,7 @@ export default function Dashboard({
 
   useEffect(() => {
     fetchUserCourses();
-  }, []);
+  }, [currentUser]);
 
   return (
     <div id="wd-dashboard">
@@ -93,7 +93,7 @@ export default function Dashboard({
           className="btn btn-primary float-start"
           id="wd-enroll-course-click"
         >
-          Enroll
+          Register Course
         </Link>
       )}
       <br />
