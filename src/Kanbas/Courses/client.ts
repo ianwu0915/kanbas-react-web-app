@@ -31,3 +31,8 @@ export const fetchAllCoursesForUser = async (userId: string) => {
   console.log("response", response.data);
   return response.data;
 }
+
+export const registerCourse = async (userId: string, courseId: string) => {
+  const response = await axios.post(`${REMOTE_SERVER}/api/users/${userId}/register/${courseId}`);
+  return response.data;
+}

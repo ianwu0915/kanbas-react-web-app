@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import * as db from "../Database";
+import { setCurrentUser } from "../Account/reducer";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { MdMessage } from "react-icons/md";
+import randomImage from "../RandomImage";
 import * as client from "../Courses/client";
 import "./style.css";
 
@@ -30,9 +32,11 @@ export default function Dashboard({
     const courses = await client.fetchAllCoursesForUser(currentUser._id);
     console.log("courses", courses);
     setUserCourse(courses);
+    // setCurrentUser({ ...currentUser, enrolledCourses: courses });
   };
 
   console.log("userCourse", userCourse);
+  console.log("currentUser", currentUser);
 
   useEffect(() => {
     fetchUserCourses();
@@ -82,19 +86,19 @@ export default function Dashboard({
           <hr />
         </>
       )}
-
       <br />
       {currentUser.role === "STUDENT" && (
-        <Link to="/Kanbas/AllCourses" className="btn btn-primary float-start" id="wd-enroll-course-click">
+        <Link
+          to="/Kanbas/AllCourses"
+          className="btn btn-primary float-start"
+          id="wd-enroll-course-click"
+        >
           Enroll
         </Link>
       )}
       <br />
-
       <hr />
-      <h2 id="wd-dashboard-published">
-        Your Courses ({courses.length})
-      </h2>{" "}
+      <h2 id="wd-dashboard-published">Your Courses ({courses.length})</h2>{" "}
       <hr />
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
@@ -106,7 +110,7 @@ export default function Dashboard({
               >
                 <div className="card rounded-3 overflow-hidden">
                   <img
-                    src={`/images/${course.image}`}
+                    src={`/images/${randomImage()}`}
                     height="{160}"
                     className="fixed-size-img"
                   />
