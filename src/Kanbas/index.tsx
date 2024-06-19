@@ -11,6 +11,7 @@ import { Provider } from "react-redux";
 import Account from "./Account";
 import Session from "./Account/Session";
 import ProtectedRoute from "./ProtectedRoute";
+import AllCourses from "./Dashboard/AllCourses";
 
 export default function Kanbas() {
   const [courses, setCourses] = useState<any[]>([]);
@@ -68,6 +69,7 @@ export default function Kanbas() {
             <Routes>
               <Route path="/" element={<Navigate to="Dashboard" />} />
               <Route path="/Account/*" element={<Account />} />
+              <Route path= "/AllCourses" element={<AllCourses courses={courses}/>} />
               <Route
                 path="Dashboard"
                 element={

@@ -1,93 +1,104 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import * as db from "../Database";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 import { MdMessage } from "react-icons/md";
+import * as client from "../Courses/client";
 import "./style.css";
 
-export default function Dashboard({ courses, course, setCourse, addNewCourse,
-  deleteCourse, updateCourse }: {
-  courses: any[]; course: any; setCourse: (course: any) => void;
-  addNewCourse: () => void; deleteCourse: (course: any) => void;
-  updateCourse: () => void; }) {
-  // const courses = db.courses;
-  // const [courses, setCourses] = useState(db.courses); //Initialize the courses state variable with the courses array from the database.
+export default function Dashboard({
+  courses,
+  course,
+  setCourse,
+  addNewCourse,
+  deleteCourse,
+  updateCourse,
+}: {
+  courses: any[];
+  course: any;
+  setCourse: (course: any) => void;
+  addNewCourse: () => void;
+  deleteCourse: (course: any) => void;
+  updateCourse: () => void;
+}) {
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  console.log("current user:", currentUser);
+  const [userCourse, setUserCourse] = useState<any[]>([]);
 
-  // // convert course into a state variable so we can change it and force a redraw of the UI
-  // const [course, setCourse] = useState<any>({
-  //   _id: "0",
-  //   name: "New Course",
-  //   number: "New Number",
-  //   startDate: "2023-09-10",
-  //   endDate: "2023-12-15",
-  //   image: "ood.png",
-  //   description: "New Description",
-  // });
+  const fetchUserCourses = async () => {
+    const courses = await client.fetchAllCoursesForUser(currentUser._id);
+    console.log("courses", courses);
+    setUserCourse(courses);
+  };
 
-  // // Function to add a new course to the courses array
-  // const addNewCourse = () => {
-  //   const newCourse = { ...course, _id: new Date().getTime().toString() };
-  //   setCourses([...courses, { ...course, ...newCourse }]);
-  // };
+  console.log("userCourse", userCourse);
 
-  // const deleteCourse = (courseId: string) => {
-  //   setCourses(courses.filter((course) => course._id !== courseId));
-  // };
-
-  // // Function to update a course in the courses array
-  // const updateCourse = () => {
-  //   setCourses(
-  //     courses.map((c) => {
-  //       if (c._id === course._id) {
-  //         return course;
-  //       } else {
-  //         return c;
-  //       }
-  //     })
-  //   );
-  // };
+  useEffect(() => {
+    fetchUserCourses();
+  }, []);
 
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
-      <h5>
-        New Course
-        <button
-          className="btn btn-primary float-end"
-          id="wd-add-new-course-click"
-          onClick={addNewCourse}
-        >
-          Add
-        </button>
-        <button className="btn btn-warning float-end me-2"
-                onClick={updateCourse} id="wd-update-course-click">
-          Update
-        </button>
-      </h5>
+      {currentUser.role === "FACULTY" && (
+        <>
+          <h5>
+            New Course
+            <button
+              className="btn btn-primary float-end"
+              id="wd-add-new-course-click"
+              onClick={addNewCourse}
+            >
+              Add
+            </button>
+            <button
+              className="btn btn-warning float-end me-2"
+              onClick={updateCourse}
+              id="wd-update-course-click"
+            >
+              Update
+            </button>
+          </h5>
+          <br />
+          {/* add input element for each of fields in course state variable*/}
+          <input
+            value={course.name}
+            className="form-control mb-2"
+            onChange={(e) => setCourse({ ...course, name: e.target.value })}
+          />
+          <input
+            value={course.number}
+            className="form-control mb-2"
+            onChange={(e) => setCourse({ ...course, number: e.target.value })}
+          />
+          <textarea
+            value={course.description}
+            className="form-control"
+            onChange={(e) =>
+              setCourse({ ...course, description: e.target.value })
+            }
+          />
+          <hr />
+        </>
+      )}
+
       <br />
-      {/* add input element for each of fields in course state variable*/}
-      <input
-        value={course.name}
-        className="form-control mb-2"
-        onChange={(e) => setCourse({ ...course, name: e.target.value })}
-      />
-        <input
-        value={course.number}
-        className="form-control mb-2"
-        onChange={(e) => setCourse({ ...course, number: e.target.value })}
-      />
-      <textarea
-        value={course.description}
-        className="form-control"
-        onChange={(e) => setCourse({ ...course, description: e.target.value })}
-      />
+      {currentUser.role === "STUDENT" && (
+        <Link to="/Kanbas/AllCourses" className="btn btn-primary float-start" id="wd-enroll-course-click">
+          Enroll
+        </Link>
+      )}
+      <br />
+
       <hr />
       <h2 id="wd-dashboard-published">
-        Published Courses ({courses.length})
+        Your Courses ({courses.length})
       </h2>{" "}
       <hr />
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
-          {courses.map((course) => (
+          {userCourse.map((course) => (
             <div className="wd-dashboard-course col" style={{ width: "300px" }}>
               <Link
                 to={`/Kanbas/Courses/${course.number}/Home`}

@@ -24,3 +24,10 @@ export const updateCourse = async (course: any) => {
   const response = await axios.put(`${COURSES_API}/${name}`, course);
   return response.data;
 };
+
+export const fetchAllCoursesForUser = async (userId: string) => {
+  console.log("userId", userId);
+  const response = await axios.get(`${REMOTE_SERVER}/api/users/${userId}/courses`);
+  console.log("response", response.data);
+  return response.data;
+}

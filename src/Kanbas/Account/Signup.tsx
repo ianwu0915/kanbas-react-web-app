@@ -36,6 +36,15 @@ export default function Signup() {
         className="form-control mb-2"
         placeholder="password"
       />
+      <select
+        value={user.role}
+        onChange={(e) => setUser({ ...user, role: e.target.value })}
+        className="form-control mb-2"
+      >
+        <option value="">Select role</option>
+        <option value="STUDENT">STUDENT</option>
+        <option value="FACULTY">FACULTY</option>
+      </select>
       <button onClick={signup} className="btn btn-primary mb-2">
         {" "}
         Sign up{" "}
