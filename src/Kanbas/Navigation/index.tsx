@@ -42,18 +42,8 @@ export default function KanbasNavigation() {
         Account
       </Link>
 
-      {/* <a
-        id="wd-account-link"
-        href="#/Kanbas/Account"
-        className="list-group-item text-white
-                   bg-black text-center border-0"
-      >
-        <FaRegCircleUser className="fs-1 text text-white" />
-        <br />
-        Account
-      </a> */}
 
-      {links.map((link) => (
+      {links.map((link, index) => (
         <Link
           key={link.path}
           to={link.path}

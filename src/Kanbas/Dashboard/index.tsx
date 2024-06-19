@@ -16,6 +16,7 @@ export default function Dashboard({
   addNewCourse,
   deleteCourse,
   updateCourse,
+  errorMessage,
 }: {
   courses: any[];
   course: any;
@@ -23,6 +24,7 @@ export default function Dashboard({
   addNewCourse: () => void;
   deleteCourse: (course: any) => void;
   updateCourse: () => void;
+  errorMessage: string | null;
 }) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   console.log("current user:", currentUser);
@@ -45,6 +47,7 @@ export default function Dashboard({
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
+      {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
       {currentUser.role === "FACULTY" && (
         <>
           <h5>

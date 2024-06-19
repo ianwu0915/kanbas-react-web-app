@@ -19,6 +19,8 @@ export default function Kanbas() {
   const dispatch = useDispatch();
   const [courses, setCourses] = useState<any[]>([]);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const fetchCourses = async () => {
     const courses = await client.fetchAllCourses();
     setCourses(courses);
@@ -39,17 +41,29 @@ export default function Kanbas() {
   });
 
   const addNewCourse = async () => {
-    const newCourse = await client.createCourse(course);
-    console.log("newCourse", newCourse);
-    // add the new course to the faculty's courses list 
+    try {
+      // First create the course
+      const newCourse = await client.createCourse(course);
+      console.log("newCourse", newCourse);
 
-    const response = await client.registerCourse(currentUser._id, newCourse._id);
-    console.log("response", response);
-    setCourses([...courses, newCourse]);
 
-    const newUserCourses = [...currentUser.enrolledCourses, response];
-    const newCurrentUser = { ...currentUser, enrolledCourses: newUserCourses };
-    dispatch(setCurrentUser(newCurrentUser));
+      //Then add the course for the faculty
+      const response = await client.registerCourse(currentUser._id, newCourse._id);
+      console.log("response", response);
+      setCourses([...courses, newCourse]);
+
+      // Update the currentuser in the store
+      const newUserCourses = [...currentUser.enrolledCourses, response];
+      const newCurrentUser = { ...currentUser, enrolledCourses: newUserCourses };
+      dispatch(setCurrentUser(newCurrentUser));
+      setErrorMessage("");
+    } catch (error: any) {
+      if (error.response && error.response.data && error.response.data.message) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage("Invalid course data. Avoid duplicate course Name and number.");
+      }
+    }
   };
 
   const deleteCourse = async (courseId: string) => {
@@ -73,7 +87,9 @@ export default function Kanbas() {
       })
     );
   
-    const newUserCourses = currentUser.enrolledCourses.map((c: any) => { c.courseId === course._id ? course : c });
+    const newUserCourses = currentUser.enrolledCourses.map((c: any) => { 
+      return c.courseId === course._id ? course : c 
+    });
     const newCurrentUser = { ...currentUser, enrolledCourses: newUserCourses };
     dispatch(setCurrentUser(newCurrentUser));
 
@@ -106,6 +122,7 @@ export default function Kanbas() {
                         addNewCourse={addNewCourse}
                         deleteCourse={deleteCourse}
                         updateCourse={updateCourse}
+                        errorMessage={errorMessage}
                       />
                     </ProtectedRoute>
                   }
