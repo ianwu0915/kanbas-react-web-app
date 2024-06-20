@@ -7,10 +7,10 @@ import { useNavigate } from "react-router";
 
 import { useState, useEffect } from "react";
 import QuizTopPanel from "./QuizTopPanel";
+import QuizContextMenu from "./QuizContextMenu";
 
 export default function Modules() {
   const { cid } = useParams();
-  const [quiz, setQuiz] = useState("");
   const [quizzes, setQuizzes] = useState([]);
   const navigate = useNavigate();
 
@@ -20,6 +20,18 @@ export default function Modules() {
     setQuizzes(quizzes);
   };
 
+  const deleteQuiz = async (id: string) => {
+    await client.deleteQuiz(id);
+    fetchQuizzes();
+  }
+
+  const publishQuiz = async (quiz: any) => {
+    quiz.published = !quiz.published;
+    console.log("publishing quiz", quiz);
+    await client.updateQuiz(quiz);
+    fetchQuizzes();
+  }
+
   const handleOnclick = (quizId: string) => {
     navigate(`${quizId}/detail`);
   }
@@ -28,12 +40,27 @@ export default function Modules() {
     fetchQuizzes();
   }, []);
 
+  const getAvailabilityStatus = (availableDate: string, dueDate: string) => {
+    const currentDate = new Date();
+    const available = new Date(availableDate);
+    const due = new Date(dueDate);
+
+    if (currentDate < available) {
+      return (
+        <span>
+          <strong>Not available until</strong> {available.toLocaleDateString("en-CA")}
+        </span>
+      );
+    } else if (currentDate >= available && currentDate <= due) {
+      return <strong>Available</strong>;
+    } else {
+      return <strong>Closed</strong>;
+    }
+  };
 
   return (
     <div id="wd-quizzes" className="me-4">
-      <br />
-      <br />
-      <br />
+   
       <br />
       <QuizTopPanel />
       <ul id="wd-quizzes" className="list-group rounded-0">
@@ -43,16 +70,16 @@ export default function Modules() {
           </li>
         </div>
         {quizzes.map((quiz: any) => (
-          <li className="wd-lesson list-group-item p-3 ps-1 fs-4" onClick={() => handleOnclick(quiz._id)}>
+          <li className="wd-lesson list-group-item p-3 ps-1 fs-4" >
             <div className="d-flex align-items-center">
               <div className="icon-block me-3">
-                <FaSpaceAwesome className="fs-4 ms-3 me-2" style={{ color: "green" }}/>
+                <FaSpaceAwesome className="fs-4 ms-3 me-2" style={{ color: "green" }} onClick={() => handleOnclick(quiz._id)}/>
               </div>
-              <div className="text-block" >
+              <div className="flex-grow-1 w-50" >
                 <span className ="fs-4 fw-bolder">{quiz.name}</span>
                 <p className="mb-0 fs-6">
                     <span className="ms-0 me-4"> 
-                        <strong>Not available until</strong> {new Date(quiz.availableDate).toLocaleDateString("en-CA")}
+                    {getAvailabilityStatus(quiz.availableDate, quiz.dueDate)}
                     </span>
                   <span className="ms-0">
                     <strong>Due</strong> {new Date(quiz.dueDate).toLocaleDateString("en-CA")}  
@@ -60,6 +87,7 @@ export default function Modules() {
                   <span className="ms-4">{quiz.points} pts</span>
                 </p>
               </div>
+              < QuizContextMenu quiz={quiz} deleteQuiz={deleteQuiz} publishQuiz={publishQuiz} />
             </div>
           </li>
         ))}

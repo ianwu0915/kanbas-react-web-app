@@ -7,8 +7,9 @@ import * as client from "./client";
 export default function QuizEditor() {
   const { cid, qid } = useParams();
   const [quiz, setQuiz] = useState({
-    courseNumber: "",
+    courseNumber: cid as string,
     name: "",
+    description: "",
     quizType: "Graded Quiz",
     points: 0,
     assignmentGroup: "Quizzes",
@@ -16,7 +17,7 @@ export default function QuizEditor() {
     timeLimit: 20,
     multipleAttempts: false,
     howManyAttempts: 0,
-    showCorrectAnswers: "",
+    showCorrectAnswers: "Immediately",
     accessCode: "",
     oneQuestionAtATime: true,
     webcamRequired: false,
@@ -24,6 +25,7 @@ export default function QuizEditor() {
     dueDate: new Date(),
     availableDate: new Date(),
     untilDate: new Date(),
+    published: false,
   });
 
   const [activeTab, setActiveTab] = useState("details");
@@ -40,24 +42,34 @@ export default function QuizEditor() {
 
   useEffect(() => {
     if (qid) {
-        fetchQuiz();
+      fetchQuiz();
     }
   }, []);
 
-  //   const createQuiz = async (quiz: any) => {
-  //     const newQuiz = await client.createQuiz(
-  //       cid as string,
-  //       quiz
-  //     );
-  //     console.log("new quiz after create is:", newQuiz);
-  //   };
+  const createQuiz = async (quiz: any) => {
+    console.log("quiz before create is:", quiz);
+    const newQuiz = await client.createQuiz(quiz);
+    console.log("new quiz after create is:", newQuiz);
+  };
 
-  //   const saveQuiz = async (quiz: any) => {
-  //     const status = await client.updateQuiz(quiz);
-  //   }
+  const updateQuiz = async (quiz: any) => {
+    const status = await client.updateQuiz(quiz);
+    console.log("status after update is:", status);
+  };
 
   // handleSave function to dispatch the addQuiz or updateQuiz action
-  const handleSave = () => {};
+  const handleSave = () => {
+    if (qid) {
+      updateQuiz(quiz);
+    } else {
+      createQuiz(quiz);
+    }
+  };
+
+  const handleSaveAndPublish = () => {
+    quiz.published = true;
+    handleSave();
+  };
 
   return (
     <div className="container my-4 ms-0">
@@ -107,12 +119,12 @@ export default function QuizEditor() {
                 className="form-control"
                 rows={5}
                 placeholder="New quiz Description"
-                value={quiz.courseNumber}
+                value={quiz.description}
                 onChange={(e) =>
-                  setQuiz({ ...quiz, courseNumber: e.target.value })
+                  setQuiz({ ...quiz, description: e.target.value })
                 }
               />
-            </div>
+            </div> 
 
             <div className="container row mb-3 ms-0">
               <div className="row mb-3">
@@ -182,8 +194,8 @@ export default function QuizEditor() {
                 </div>
               </div>
               <div className="col-md-4 fs-4 fw-bold text-md-end mb-3">
-                    Option
-                </div>
+                Option
+              </div>
               <div className="row mb-3">
                 <div className="col-md-4 text-md-end">
                   <label htmlFor="wd-shuffle-answers" className="form-label">
@@ -334,16 +346,23 @@ export default function QuizEditor() {
                         />
                       </div>
                     </div>
+                    {!quiz.published && (<Link
+                      onClick={handleSaveAndPublish}
+                      to={`/Kanbas/Courses/${cid}/Quizzes`}
+                      className="btn btn-primary float-end ms-2"
+                    >
+                      Save and Publish
+                    </Link>)}
                     <Link
                       onClick={handleSave}
-                      to={`/Kanbas/Courses/${cid}/Quizs`}
+                      to={`/Kanbas/Courses/${cid}/Quizzes`}
                       className="btn btn-danger float-end"
                     >
                       Save
                     </Link>
                     <Link
                       to={`/Kanbas/Courses/${cid}/Quizzes`}
-                      className="btn btn-light me-2 float-end"
+                      className="btn btn-secondary me-2 float-end"
                     >
                       Cancel
                     </Link>

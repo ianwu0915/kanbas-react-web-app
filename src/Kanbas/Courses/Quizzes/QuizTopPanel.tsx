@@ -16,8 +16,6 @@ export default function QuizTopPanel() {
           <Link
             to={`/Kanbas/Courses/${cid}/Quizzes/editor`}
             className="btn btn-danger float-end fs-5"
-            // data-bs-toggle="modal"
-            // data-bs-target="#wd-add-quiz-dialog"
           >
             <BsPlus className="fs-2 mb-1" />
             Quiz

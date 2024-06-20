@@ -14,3 +14,21 @@ export const findQuizById = async (quizId: string) => {
     console.log("response from findQuizById", response.data);
     return response.data;
 }
+
+export const createQuiz = async (quiz: any) => {
+    const response = await axios.post(`${REMOTE_SERVER}/api/quizzes`, quiz);
+    console.log("response from createQuiz", response.data);
+    return response.data;
+}
+
+export const updateQuiz = async (quiz: any) => {
+    const response = await axios.put(`${REMOTE_SERVER}/api/quizzes/${quiz._id}`, quiz);
+    console.log("response from updateQuiz", response.data);
+    return response.data;
+}
+
+export const deleteQuiz = async (quizId: string) => {
+    const response = await axios.delete(`${REMOTE_SERVER}/api/quizzes/${quizId}`);
+    console.log("response from deleteQuiz", response.data);
+    return response.data;
+}
