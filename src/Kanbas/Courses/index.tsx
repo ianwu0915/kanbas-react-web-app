@@ -12,6 +12,7 @@ import { courses } from "../Database";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import QuizDetails from "./Quizzes/QuizDetails";
+import QuizEditor from "./Quizzes/QuizEditor";
 
 export default function Courses({ courses }: { courses: any[] }) {
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
@@ -68,6 +69,9 @@ export default function Courses({ courses }: { courses: any[] }) {
             <Route path="Grades" element={<Grades />} />
             <Route path="Quizzes" element={<Quizzes />} />
             <Route path="Quizzes/:qid/detail" element={<QuizDetails />} />
+            <Route path="Quizzes/:qid/editor" element={<QuizEditor />} />
+            <Route path="Quizzes/editor" element={<QuizEditor />} />
+
           </Routes>
         </div>
       </div>

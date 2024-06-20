@@ -6,6 +6,7 @@ import * as client from "./client";
 import { useNavigate } from "react-router";
 
 import { useState, useEffect } from "react";
+import QuizTopPanel from "./QuizTopPanel";
 
 export default function Modules() {
   const { cid } = useParams();
@@ -34,6 +35,7 @@ export default function Modules() {
       <br />
       <br />
       <br />
+      <QuizTopPanel />
       <ul id="wd-quizzes" className="list-group rounded-0">
         <div>
           <li className="wd-quiz list-group-item p-4 fs-4 fw-bold border-gray bg-secondary">
@@ -53,7 +55,7 @@ export default function Modules() {
                         <strong>Not available until</strong> {new Date(quiz.availableDate).toLocaleDateString("en-CA")}
                     </span>
                   <span className="ms-0">
-                    Due {new Date(quiz.dueDate).toLocaleDateString("en-CA")}  
+                    <strong>Due</strong> {new Date(quiz.dueDate).toLocaleDateString("en-CA")}  
                   </span>
                   <span className="ms-4">{quiz.points} pts</span>
                 </p>

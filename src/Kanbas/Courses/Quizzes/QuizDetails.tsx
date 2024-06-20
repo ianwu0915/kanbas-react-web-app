@@ -1,11 +1,12 @@
 import React from "react";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 import * as client from "./client";
 import "./style.css";
+import {Link} from "react-router-dom";
 
 export default function QuizDetails() {
-  const { qid } = useParams();
+  const { cid, qid } = useParams();
   const [quiz, setQuiz] = useState({
     courseNumber: "",
     name: "",
@@ -32,16 +33,19 @@ export default function QuizDetails() {
   };
 
   useEffect(() => {
-    fetchQuiz();
-  }, [quiz]);
-
-  if (!quiz) {
-    return <div>Loading...</div>;
-  }
+    if (qid) {
+        fetchQuiz();
+    }
+  }, []);
 
   return (
     <div className="quiz-info w-75">
-      <h2 className ="fw-bold fs-1 ms-5"> {quiz.name}</h2>
+      <div className="d-flex justify-content-center my-3">
+        <button className="btn btn-secondary mx-2">Preview</button>
+        <Link className="btn btn-secondary mx-2" to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/editor`} >Edit</Link>
+      </div>
+      <hr />
+      <h2 className="fw-bold fs-1 ms-5"> {quiz.name}</h2>
       <br />
       <table className="details">
         <tbody>
