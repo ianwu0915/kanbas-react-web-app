@@ -11,6 +11,7 @@ import { FaAlignJustify } from "react-icons/fa";
 import { courses } from "../Database";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import QuizDetails from "./Quizzes/QuizDetails";
 
 export default function Courses({ courses }: { courses: any[] }) {
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
@@ -66,6 +67,7 @@ export default function Courses({ courses }: { courses: any[] }) {
             <Route path="People/:uid" element={<PeopleTable />} />
             <Route path="Grades" element={<Grades />} />
             <Route path="Quizzes" element={<Quizzes />} />
+            <Route path="Quizzes/:qid/detail" element={<QuizDetails />} />
           </Routes>
         </div>
       </div>

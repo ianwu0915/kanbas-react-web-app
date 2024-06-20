@@ -8,3 +8,9 @@ export const findQuizzesForCourse = async (courseId: string) => {
     console.log("response from findQuizzesForCourse", response.data);
     return response.data;
 }
+
+export const findQuizById = async (quizId: string) => {
+    const response = await axios.get(`${REMOTE_SERVER}/api/quizzes/${quizId}`);
+    console.log("response from findQuizById", response.data);
+    return response.data;
+}

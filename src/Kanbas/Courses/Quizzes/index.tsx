@@ -3,6 +3,7 @@ import { BsGripVertical } from "react-icons/bs";
 import { FaSpaceAwesome } from "react-icons/fa6";
 import { useParams } from "react-router";
 import * as client from "./client";
+import { useNavigate } from "react-router";
 
 import { useState, useEffect } from "react";
 
@@ -10,6 +11,7 @@ export default function Modules() {
   const { cid } = useParams();
   const [quiz, setQuiz] = useState("");
   const [quizzes, setQuizzes] = useState([]);
+  const navigate = useNavigate();
 
   const fetchQuizzes = async () => {
     const quizzes = await client.findQuizzesForCourse(cid as string);
@@ -17,9 +19,14 @@ export default function Modules() {
     setQuizzes(quizzes);
   };
 
+  const handleOnclick = (quizId: string) => {
+    navigate(`${quizId}/detail`);
+  }
+
   useEffect(() => {
     fetchQuizzes();
   }, []);
+
 
   return (
     <div id="wd-quizzes" className="me-4">
@@ -34,12 +41,12 @@ export default function Modules() {
           </li>
         </div>
         {quizzes.map((quiz: any) => (
-          <li className="wd-lesson list-group-item p-3 ps-1 fs-4">
+          <li className="wd-lesson list-group-item p-3 ps-1 fs-4" onClick={() => handleOnclick(quiz._id)}>
             <div className="d-flex align-items-center">
               <div className="icon-block me-3">
                 <FaSpaceAwesome className="fs-4 ms-3 me-2" style={{ color: "green" }}/>
               </div>
-              <div className="text-block">
+              <div className="text-block" >
                 <span className ="fs-4 fw-bolder">{quiz.name}</span>
                 <p className="mb-0 fs-6">
                     <span className="ms-0 me-4"> 
