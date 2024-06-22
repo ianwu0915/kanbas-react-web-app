@@ -3,15 +3,15 @@ import { useEffect } from "react";
 import { IoTrashOutline } from "react-icons/io5";
 import "../../../styles.css";
 import { FaPlus } from "react-icons/fa6";
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from "react-quill";
+
+import "react-quill/dist/quill.snow.css";
 
 export default function QuestionEditor({
   onSave,
 }: {
   onSave: (data: any) => void;
 }) {
-
   const [question, setQuestion] = useState({
     quiz: "",
     title: "",
@@ -21,6 +21,11 @@ export default function QuestionEditor({
     choices: [],
     correctAnswer: "",
   });
+
+  const stripHtml = (htmlString: string) => {
+    return htmlString.replace(/<[^>]*>?/gm, '');
+  };
+
   const [questionType, setQuestionType] = useState("Multiple Choice");
   // const [points, setPoints] = useState(0);
   const [choices, setChoices] = useState([{ text: "", correct: false }]);
@@ -55,14 +60,17 @@ export default function QuestionEditor({
 
   useEffect(() => {
     console.log("current choices include: ", choices);
-  }, [choices]); 
+    // console.log("current question text", stripHtml(question.questionText));
+  }, [choices]);
 
   const handleSave = () => {
+    const context = stripHtml(question.questionText);
     const questionSave = {
       ...question,
       choices: choices,
+      questionText: context,
     };
-   onSave(questionSave)
+    onSave(questionSave);
   };
 
   return (
@@ -78,7 +86,9 @@ export default function QuestionEditor({
               className="form-control"
               value={question.title}
               placeholder="Enter title for the question"
-              onChange={(e) => setQuestion({ ...question, title: e.target.value })}
+              onChange={(e) =>
+                setQuestion({ ...question, title: e.target.value })
+              }
               style={{ width: "300px" }}
             ></input>
           </div>
@@ -87,14 +97,13 @@ export default function QuestionEditor({
               className="form-select"
               value={questionType}
               onChange={(e) => {
-                setQuestionType(e.target.value)
-                setQuestion({ ...question, type: e.target.value})
+                setQuestionType(e.target.value);
+                setQuestion({ ...question, type: e.target.value });
               }}
             >
               <option>Multiple Choice</option>
               <option>Fill In the Blank</option>
               <option>True/False</option>
-
             </select>
           </div>
           <div className="d-flex align-items-center ms-4 ms-auto">
@@ -107,7 +116,9 @@ export default function QuestionEditor({
               className="form-control"
               value={question.points}
               placeholder="Enter points for the question"
-              onChange={(e) => setQuestion({ ...question, points: parseInt(e.target.value) })}
+              onChange={(e) =>
+                setQuestion({ ...question, points: parseInt(e.target.value) })
+              }
               style={{ width: "60px" }} // Adjust the width as needed
             />
           </div>
@@ -118,7 +129,17 @@ export default function QuestionEditor({
           <label htmlFor="question-title" className="form-label">
             Question:
           </label>
-          <ReactQuill id="question-title" className="mb-5" theme="snow" value={question.questionText} onChange={(value) => setQuestion({ ...question, questionText: value })}  style={{ height: '200px' }}   />
+          <ReactQuill
+            id="question-title"
+            className="mb-5"
+            theme="snow"
+            value={question.questionText}
+            // readOnly={true} modules={{toolbar: false}}
+            onChange={(value) => {
+              setQuestion({ ...question, questionText: value })
+            }}
+            style={{ height: "200px" }}
+          />
           {/* <textarea
             id="question-title"
             className="form-control"
@@ -129,10 +150,11 @@ export default function QuestionEditor({
           /> */}
         </div>
         <br />
-        
-        {questionType === "Multiple Choice" || questionType === "Fill In the Blank" ? (
+
+        {questionType === "Multiple Choice" ||
+        questionType === "Fill In the Blank" ? (
           <div className="mb-4">
-             <h4 className="mt-5 mb-4 fs-5 fw-bold">Answers:</h4>
+            <h4 className="mt-5 mb-4 fs-5 fw-bold">Answers:</h4>
             <label className="form-label">Choices</label>
             {choices.map((choice, index) => (
               <div key={index} className="input-group mb-3 w-75">
@@ -177,7 +199,9 @@ export default function QuestionEditor({
                 name="trueFalse"
                 value="True"
               />
-              <label htmlFor="trueOption" className="ms-2">True</label>
+              <label htmlFor="trueOption" className="ms-2">
+                True
+              </label>
             </div>
             <div className="mb-3 fs-6">
               <input
@@ -186,7 +210,9 @@ export default function QuestionEditor({
                 name="trueFalse"
                 value="False"
               />
-              <label htmlFor="falseOption" className="ms-2">False</label>
+              <label htmlFor="falseOption" className="ms-2">
+                False
+              </label>
             </div>
           </div>
         )}

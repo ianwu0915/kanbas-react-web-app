@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import * as client from "./client";
 import QuestionEditor from "./Questions/QuestionEditor";
+import QuestionList from "./Questions/QuestionList";
 import { FaPlus } from "react-icons/fa";
 
 export default function QuizEditor() {
@@ -409,20 +410,28 @@ export default function QuizEditor() {
             </div>
           </div>
         )}
-        {activeTab === "questions" &&
-          (!editQuestion ? (
-            <div className="d-flex justify-content-center my-3">
-              <button
-                className="btn btn-secondary mt-4 p-3"
-                onClick={() => setEditQuestion(!editQuestion)}
-              >
-                <FaPlus className="me-2 mb-1" />
-                New Question
-              </button>
-            </div>
+        {activeTab === "questions" &&(
+         <>
+          {!editQuestion ? (
+            <>
+              <QuestionList
+                questions={questions}
+              />
+              <div className="d-flex justify-content-center my-3">
+                <button
+                  className="btn btn-secondary mt-4 p-3"
+                  onClick={() => setEditQuestion(true)}
+                >
+                  <FaPlus className="me-2 mb-1" />
+                  New Question
+                </button>
+              </div>
+            </>
           ) : (
             <QuestionEditor onSave={handleQuestionSave} />
-          ))}
+          )}
+        </>
+      )}
       </div>
     </div>
   );
