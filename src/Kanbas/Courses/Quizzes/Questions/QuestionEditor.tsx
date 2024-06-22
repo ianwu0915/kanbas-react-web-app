@@ -47,18 +47,18 @@ export default function QuestionEditor({
     console.log("status from createQuestion", status);
   }
 
-  const [choices, setChoices] = useState([{ text: "", correct: false }]);
+  const [choices, setChoices] = useState(questionFromQuiz.choices? questionFromQuiz.choices :[{ text: "", correct: false }]);
 
   const addChoice = () => {
     setChoices([...choices, { text: "", correct: false }]);
   };
 
   const removeChoice = (index: any) => {
-    setChoices(choices.filter((_, i) => i !== index));
+    setChoices(choices.filter((_: any, i:any) => i !== index));
   };
 
   const handleChoiceChange = (value: any, index: any) => {
-    const newChoices = choices.map((choice, i) => {
+    const newChoices = choices.map((choice:any, i:any) => {
       if (i === index) {
         return { ...choice, text: value };
       }
@@ -72,7 +72,7 @@ export default function QuestionEditor({
   };
 
   const handleCorrectChoiceChange = (index: any) => {
-    const newChoices = choices.map((choice, i) => ({
+    const newChoices = choices.map((choice:any, i:any) => ({
       ...choice,
       correct: i === index,
     }));
@@ -193,7 +193,7 @@ export default function QuestionEditor({
           <div className="mb-4">
             <h4 className="mt-5 mb-4 fs-5 fw-bold">Answers:</h4>
             <label className="form-label">Choices</label>
-            {choices.map((choice, index) => (
+            {choices.map((choice:any, index:any) => (
               <div key={index} className="input-group mb-3 w-75">
                 <div className="input-group-text">
                   <input
