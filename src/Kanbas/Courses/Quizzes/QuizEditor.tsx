@@ -3,6 +3,8 @@ import { useParams } from "react-router";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import * as client from "./client";
+import QuestionEditor from "./Questions/QuestionEditor";
+import { FaPlus } from "react-icons/fa";
 
 export default function QuizEditor() {
   const { cid, qid } = useParams();
@@ -28,7 +30,30 @@ export default function QuizEditor() {
     published: false,
   });
 
+  interface Question {
+    quiz: string;
+    title: string;
+    type: string;
+    points: number;
+    questionText: string;
+    choices: [{text: string, correct: boolean}],
+    correctAnswer: string;
+  }
+
+ const [questions, setQuestions] = useState<Question[]>([]);
+
+  const [question, setQuestion] = useState({
+    quiz: "",
+    title: "",
+    type: "Multiple Choice",
+    points: 0,
+    questionText: "",
+    choices: [],
+    correctAnswer: "",
+  });
+
   const [activeTab, setActiveTab] = useState("details");
+  const [editQuestion, setEditQuestion] = useState(false);
 
   const fetchQuiz = async () => {
     const quiz = await client.findQuizById(qid as string);
@@ -70,6 +95,16 @@ export default function QuizEditor() {
     quiz.published = true;
     handleSave();
   };
+
+  const handleQuestionSave = (newQuestion: any) => {
+    setQuestion(newQuestion);
+    setQuestions([...questions, newQuestion]);
+    setEditQuestion(false);
+  };
+
+  useEffect(() => {
+    console.log("questions after save is:", questions);
+  }, [questions]);
 
   return (
     <div className="container my-4 ms-0">
@@ -124,7 +159,7 @@ export default function QuizEditor() {
                   setQuiz({ ...quiz, description: e.target.value })
                 }
               />
-            </div> 
+            </div>
 
             <div className="container row mb-3 ms-0">
               <div className="row mb-3">
@@ -346,13 +381,15 @@ export default function QuizEditor() {
                         />
                       </div>
                     </div>
-                    {!quiz.published && (<Link
-                      onClick={handleSaveAndPublish}
-                      to={`/Kanbas/Courses/${cid}/Quizzes`}
-                      className="btn btn-primary float-end ms-2"
-                    >
-                      Save and Publish
-                    </Link>)}
+                    {!quiz.published && (
+                      <Link
+                        onClick={handleSaveAndPublish}
+                        to={`/Kanbas/Courses/${cid}/Quizzes`}
+                        className="btn btn-primary float-end ms-2"
+                      >
+                        Save and Publish
+                      </Link>
+                    )}
                     <Link
                       onClick={handleSave}
                       to={`/Kanbas/Courses/${cid}/Quizzes`}
@@ -372,11 +409,20 @@ export default function QuizEditor() {
             </div>
           </div>
         )}
-        {activeTab === "questions" && (
-          <div>
-            <p>Questions content goes here.</p>
-          </div>
-        )}
+        {activeTab === "questions" &&
+          (!editQuestion ? (
+            <div className="d-flex justify-content-center my-3">
+              <button
+                className="btn btn-secondary mt-4 p-3"
+                onClick={() => setEditQuestion(!editQuestion)}
+              >
+                <FaPlus className="me-2 mb-1" />
+                New Question
+              </button>
+            </div>
+          ) : (
+            <QuestionEditor onSave={handleQuestionSave} />
+          ))}
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ import QuizContextMenu from "./QuizContextMenu";
 
 export default function Modules() {
   const { cid } = useParams();
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
   const [quizzes, setQuizzes] = useState([]);
   const navigate = useNavigate();
 
@@ -62,7 +63,7 @@ export default function Modules() {
     <div id="wd-quizzes" className="me-4">
    
       <br />
-      <QuizTopPanel />
+      {currentUser.role === "FACULTY" && <QuizTopPanel />}
       <ul id="wd-quizzes" className="list-group rounded-0">
         <div>
           <li className="wd-quiz list-group-item p-4 fs-4 fw-bold border-gray bg-secondary">
@@ -87,7 +88,7 @@ export default function Modules() {
                   <span className="ms-4">{quiz.points} pts</span>
                 </p>
               </div>
-              < QuizContextMenu quiz={quiz} deleteQuiz={deleteQuiz} publishQuiz={publishQuiz} />
+              {currentUser.role === "FACULTY" && < QuizContextMenu quiz={quiz} deleteQuiz={deleteQuiz} publishQuiz={publishQuiz} />}
             </div>
           </li>
         ))}
