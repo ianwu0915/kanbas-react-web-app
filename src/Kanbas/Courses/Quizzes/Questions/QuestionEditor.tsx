@@ -1,19 +1,27 @@
 import React, { useState } from "react";
+import * as client from "./client";
 import { useEffect } from "react";
+import { useParams } from "react-router";
 import { IoTrashOutline } from "react-icons/io5";
 import "../../../styles.css";
 import { FaPlus } from "react-icons/fa6";
 import ReactQuill from "react-quill";
 
+
 import "react-quill/dist/quill.snow.css";
 
 export default function QuestionEditor({
+  questionFromQuiz,
   onSave,
+  setEditQuestion,
 }: {
+  questionFromQuiz: any;
   onSave: (data: any) => void;
+  setEditQuestion: (value: boolean) => void;
 }) {
-  const [question, setQuestion] = useState({
-    quiz: "",
+  const { qid } = useParams();
+  const [question, setQuestion] = useState(questionFromQuiz? questionFromQuiz :{
+    quiz: qid,
     title: "",
     type: "Multiple Choice",
     points: 0,
@@ -22,12 +30,23 @@ export default function QuestionEditor({
     correctAnswer: "",
   });
 
+
   const stripHtml = (htmlString: string) => {
     return htmlString.replace(/<[^>]*>?/gm, '');
   };
 
   const [questionType, setQuestionType] = useState("Multiple Choice");
-  // const [points, setPoints] = useState(0);
+
+  const updateQuestion = async (questions: any) => {
+    const status = await client.updateQuestion(questions);
+    console.log("status from updateQuestion", status);
+  }
+
+  const createQuestion = async (question: any) => {
+    const status = await client.createQuestion(question);
+    console.log("status from createQuestion", status);
+  }
+
   const [choices, setChoices] = useState([{ text: "", correct: false }]);
 
   const addChoice = () => {
@@ -48,7 +67,9 @@ export default function QuestionEditor({
     setChoices(newChoices);
   };
 
-  const onCancel = () => {};
+  const onCancel = () => {
+    setEditQuestion(false);
+  };
 
   const handleCorrectChoiceChange = (index: any) => {
     const newChoices = choices.map((choice, i) => ({
@@ -70,7 +91,23 @@ export default function QuestionEditor({
       choices: choices,
       questionText: context,
     };
-    onSave(questionSave);
+
+    // If the qid exists, then we are updating the question
+    if (qid) {
+      if (questionFromQuiz) {
+        questionSave._id = questionFromQuiz._id;
+        updateQuestion(questionSave);
+      } else {
+        createQuestion(questionSave);
+      }
+
+      setEditQuestion(false);
+    } else {
+      // If the qid does not exist, then we are in the process of creating a new quiz with new questions
+      // So We leave the creation to the QuizEditor component
+      // We passed the question created to the QuizEditor component
+      onSave(questionSave);
+    }
   };
 
   return (

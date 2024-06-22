@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import * as client from "./client";
+import * as questionClient from "./Questions/client";
 import QuestionEditor from "./Questions/QuestionEditor";
 import QuestionList from "./Questions/QuestionList";
 import { FaPlus } from "react-icons/fa";
@@ -31,17 +32,23 @@ export default function QuizEditor() {
     published: false,
   });
 
-  interface Question {
-    quiz: string;
-    title: string;
-    type: string;
-    points: number;
-    questionText: string;
-    choices: [{text: string, correct: boolean}],
-    correctAnswer: string;
-  }
+  // interface Question {
+  //   quiz: string;
+  //   title: string;
+  //   type: string;
+  //   points: number;
+  //   questionText: string;
+  //   choices: {text: string, correct: boolean}[],
+  //   correctAnswer: string;
+  // }
 
- const [questions, setQuestions] = useState<Question[]>([]);
+ const [questions, setQuestions] = useState<any[]>([]);
+
+ const fetchQuestions = async () => {
+    const questions = await questionClient.findQuestionsForQuiz(qid as string);
+    console.log("questions from fetchQuestions is:", questions);
+    setQuestions(questions);
+  }
 
   const [question, setQuestion] = useState({
     quiz: "",
@@ -72,10 +79,21 @@ export default function QuizEditor() {
     }
   }, []);
 
-  const createQuiz = async (quiz: any) => {
+  useEffect(() => {
+    fetchQuestions();
+  }, [editQuestion]);
+
+  // Function to create the quiz and all the questions associated with it
+  const createQuizAndQuestions = async (quiz: any) => {
     console.log("quiz before create is:", quiz);
     const newQuiz = await client.createQuiz(quiz);
     console.log("new quiz after create is:", newQuiz);
+    // Create All the questions 
+    questions.forEach(async (question) => {
+      question.quiz = newQuiz._id;
+      const newQuestion = await questionClient.createQuestion(question);
+      console.log("new question after create is:", newQuestion);
+    });
   };
 
   const updateQuiz = async (quiz: any) => {
@@ -83,12 +101,23 @@ export default function QuizEditor() {
     console.log("status after update is:", status);
   };
 
+  // Function to delete the quiz and all the questions associated with it
+  const deleteQuizAndQuestions = async (quizId: string) => {
+    const status = await client.deleteQuiz(quizId);
+    console.log("status after delete is:", status);
+    const questions = await questionClient.findQuestionsForQuiz(quizId);
+    questions.forEach(async (question: any) => {
+      const status = await questionClient.deleteQuestion(question._id);
+      console.log("status after delete is:", status);
+    });
+  }
+
   // handleSave function to dispatch the addQuiz or updateQuiz action
   const handleSave = () => {
     if (qid) {
       updateQuiz(quiz);
     } else {
-      createQuiz(quiz);
+      createQuizAndQuestions(quiz);
     }
   };
 
@@ -416,6 +445,9 @@ export default function QuizEditor() {
             <>
               <QuestionList
                 questions={questions}
+                setQuestion={setQuestion}
+                setQuestions={setQuestions}
+                setEditQuestion={setEditQuestion}
               />
               <div className="d-flex justify-content-center my-3">
                 <button
@@ -428,7 +460,8 @@ export default function QuizEditor() {
               </div>
             </>
           ) : (
-            <QuestionEditor onSave={handleQuestionSave} />
+            <QuestionEditor questionFromQuiz={question} onSave={handleQuestionSave} setEditQuestion={setEditQuestion}/>
+
           )}
         </>
       )}
