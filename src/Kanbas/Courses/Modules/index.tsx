@@ -52,7 +52,7 @@ export default function Modules() {
 
   return (
     <div id="wd-modules" className="me-4">
-      {currentUser.role === "Faculty" && (
+      {currentUser.role === "FACULTY" && (
       <ModulesControls
         moduleName={moduleName}
         setModuleName={setModuleName}

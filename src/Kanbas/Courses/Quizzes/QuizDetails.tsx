@@ -40,9 +40,10 @@ export default function QuizDetails() {
 
   return (
     <div className="quiz-info w-75">
-      <div className="d-flex justify-content-center my-3">
-        <button className="btn btn-secondary mx-2">Preview</button>
-        <Link className="btn btn-secondary mx-2" to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/editor`} >Edit</Link>
+      <div className="d-flex justify-content-start my-3">
+      <Link className="btn btn-secondary mx-1" to={`/Kanbas/Courses/${cid}/Quizzes/${qid}`} >Preview</Link>
+        <Link className="btn btn-secondary mx-1" to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/editor`} >Edit</Link>
+        <Link className="btn btn-secondary mx-1" to={`/Kanbas/Courses/${cid}/Quizzes`} >Back</Link>
       </div>
       <hr />
       <h2 className="fw-bold fs-1 ms-5"> {quiz.name}</h2>

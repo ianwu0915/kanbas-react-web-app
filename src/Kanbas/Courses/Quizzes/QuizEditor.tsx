@@ -462,7 +462,8 @@ export default function QuizEditor() {
                     )}
                     <Link
                       onClick={handleSave}
-                      to={`/Kanbas/Courses/${cid}/Quizzes`}
+                      // to={`/Kanbas/Courses/${cid}/Quizzes`}
+                      to={`../Quizzes/${qid}/detail`}
                       className="btn btn-danger float-end"
                     >
                       Save

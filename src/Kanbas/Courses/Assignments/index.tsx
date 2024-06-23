@@ -33,8 +33,10 @@ export default function Assignments() {
 
   const fetchAssignments = async () => {
     const assignments = await client.findAssignmentsForCourse(cid as string);
+    console.log("cid:", cid);
     dispatch(setAssignments(assignments));
     console.log("the new assignments:", assignments);
+    console.log("current user:", currentUser);  
   };
 
   const handleNavigate = (assignment: any) => {
@@ -56,7 +58,7 @@ export default function Assignments() {
           placeholder="Search for Assignments"
           style={{ maxWidth: "300px" }} // Optional: To control the width of the input
         />
-        {currentUser.role === "Faculty" && (
+        {currentUser.role === "FACULTY" && (
           <div className="d-flex">
             <button
               id="wd-add-assignment-group"

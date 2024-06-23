@@ -162,7 +162,7 @@ export default function QuestionEditor({
     };
 
     updateQuestion(questionSave);
-    setEditQuestion(false);
+    onSave(questionSave);
 
 
     // // If the qid exists, then we are updating the question
