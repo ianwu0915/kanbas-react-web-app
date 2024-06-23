@@ -36,10 +36,11 @@ export default function Profile() {
           <input className="form-control mt-2 w-50" value={profile.lastName}  onChange={(e) => setProfile({ ...profile, lastName:  e.target.value })}/>
           <input className="form-control mt-2 w-50" value={profile.dob} onChange={(e) => setProfile({ ...profile, dob: e.target.value })} type="date"/>
           <input className="form-control mt-2 w-50" value={profile.email} onChange={(e) => setProfile({ ...profile, email: e.target.value })}/>
-          <select className="form-control mt-2 w-50" onChange={(e) => setProfile({ ...profile, role: e.target.value })}>
+          <select className="form-control mt-2 w-50" value = {profile.role}onChange={(e) => setProfile({ ...profile, role: e.target.value })}>
             <option value="USER">User</option>            <option value="ADMIN">Admin</option>
             <option value="FACULTY">Faculty</option>      <option value="STUDENT">Student</option>
           </select>
+          <br />
           <button onClick={signout} className="btn btn-danger w-50">
     Sign out
   </button>

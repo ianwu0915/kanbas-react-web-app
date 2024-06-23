@@ -79,13 +79,25 @@ export default function QuestionCard({
           </div>
         )}
         {question.type === 'Fill In the Blank' && (
-          <input
-            type="text"
-            className="form-control"
-            value={answer}
-            onChange={handleChange}
-            disabled={readonly}
-          />
+          <div>
+            <input
+              type="text"
+              className="form-control mb-3"
+              value={answer}
+              onChange={handleChange}
+              disabled={readonly}
+            />
+            {readonly && !question.choices.some(choice => choice.text === answer && choice.correct) && (
+              <div>
+                <strong>Correct Answers:</strong>
+                <ul>
+                  {question.choices.filter(choice => choice.correct).map((choice, index) => (
+                    <li key={index}>{choice.text}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         )}
         {question.type === 'True/False' && (
           <div>

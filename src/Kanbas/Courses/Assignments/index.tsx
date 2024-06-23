@@ -7,14 +7,19 @@ import { useParams, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { setAssignments, addAssignment, deleteAssignment, updateAssignment } from "./AssignmentsReducer";
+import {
+  setAssignments,
+  addAssignment,
+  deleteAssignment,
+  updateAssignment,
+} from "./AssignmentsReducer";
 import * as client from "./client";
 import { useDispatch } from "react-redux";
-
 
 export default function Assignments() {
   const { cid } = useParams();
   const navigate = useNavigate();
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
   const dispatch = useDispatch();
   // const [assignment, setAssignment] = useState({
   //   title: "",
@@ -30,9 +35,7 @@ export default function Assignments() {
     const assignments = await client.findAssignmentsForCourse(cid as string);
     dispatch(setAssignments(assignments));
     console.log("the new assignments:", assignments);
-  }
-
-  
+  };
 
   const handleNavigate = (assignment: any) => {
     navigate(`/Kanbas/Courses/${cid}/Assignments/Editor/${assignment._id}`, {
@@ -53,27 +56,29 @@ export default function Assignments() {
           placeholder="Search for Assignments"
           style={{ maxWidth: "300px" }} // Optional: To control the width of the input
         />
-        <div className="d-flex">
-          <button
-            id="wd-add-assignment-group"
-            className="btn btn-outline-secondary me-2 float-end"
-          >
-            <BsPlus className="fs-4 mb-1" />
-            Group
-          </button>
-          <Link
-            to="/Kanbas/Courses/RS101/Assignments/Editor"
-            className="btn btn-danger float-end"
-            // data-bs-toggle="modal"
-            // data-bs-target="#wd-add-assignment-dialog"
-          >
-            <BsPlus className="fs-4 mb-1" />
-            Assignment
-          </Link>
-        </div>
+        {currentUser.role === "Faculty" && (
+          <div className="d-flex">
+            <button
+              id="wd-add-assignment-group"
+              className="btn btn-outline-secondary me-2 float-end"
+            >
+              <BsPlus className="fs-4 mb-1" />
+              Group
+            </button>
+            <Link
+              to="/Kanbas/Courses/RS101/Assignments/Editor"
+              className="btn btn-danger float-end"
+              // data-bs-toggle="modal"
+              // data-bs-target="#wd-add-assignment-dialog"
+            >
+              <BsPlus className="fs-4 mb-1" />
+              Assignment
+            </Link>
+          </div>
+        )}
       </div>
 
-      <ul id="wd-assignment-list" className="list-group rounded-0 ms-5">
+      <ul id="wd-assignment-list" className="list-group rounded-0 ms-5" style={{ border: '1px solid black' }}>
         <div className="wd-title d-flex align-items-center p-3 bg-secondary">
           <BsGripVertical className="me-2 fs-5" />
           <BsChevronDown className="me-2 fs-5" />

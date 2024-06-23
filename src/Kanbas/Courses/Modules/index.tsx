@@ -12,6 +12,7 @@ import LessonControlButtons from "./LessonControlButtons";
 import { BsGripVertical } from "react-icons/bs";
 import { useParams } from "react-router";
 
+
 import * as client from "./client";
 import { useState, useEffect } from "react";
 
@@ -19,6 +20,7 @@ export default function Modules() {
   const { cid } = useParams();
   const [moduleName, setModuleName] = useState("");
   const { modules } = useSelector((state: any) => state.modulesReducer);
+  const {currentUser} = useSelector((state: any) => state.accountReducer);
   const dispatch = useDispatch();
 
   const fetchModules = async () => {
@@ -50,6 +52,7 @@ export default function Modules() {
 
   return (
     <div id="wd-modules" className="me-4">
+      {currentUser.role === "Faculty" && (
       <ModulesControls
         moduleName={moduleName}
         setModuleName={setModuleName}
@@ -57,7 +60,7 @@ export default function Modules() {
           createModule({ name: moduleName, description: "", course: cid, lesson: [] });
           setModuleName("");
         }}
-      />
+      />)}
       <br />
       <br />
       <br />
