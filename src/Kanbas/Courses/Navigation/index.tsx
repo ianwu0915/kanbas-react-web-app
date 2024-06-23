@@ -1,17 +1,29 @@
+import "./index.css";
+import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 export default function CoursesNavigation() {
-    return (
-      <ul id="wd-courses-navigation">
-        <li><a id="wd-course-home-link"    href="#/Kanbas/Courses/1234/Home">Home</a></li>
-        <li><a id="wd-course-modules-link" href="#/Kanbas/Courses/1234/Modules">Modules
-          </a></li>
-        <li><a id="wd-course-piazza-link"  href="#/Kanbas/Courses/1234/Piazza">Piazza</a></li>
-        <li><a id="wd-course-zoom-link"    href="#/Kanbas/Courses/1234/Zoom">Zoom</a></li>
-        <li><a id="wd-course-quizzes-link" href="#/Kanbas/Courses/1234/Assignments">
-            Assignments</a></li>
-        <li><a id="wd-course-assignments-link" href="#/Kanbas/Courses/1234/Quizzes">Quizzes
-          </a></li>
-        <li><a id="wd-course-grades-link"  href="#/Kanbas/Courses/1234/Grades">Grades</a></li>
-      </ul>
-  );}
+  const links = [
+    "Home",
+    "Modules",
+    "Piazza",
+    "Zoom",
+    "Assignments",
+    "Quizzes",
+    "People",
+    "Grades",
+  ];
+  const { pathname } = useLocation();
   
-  
+  return (
+    <div id="wd-courses-navigation" className="list-group fs-5 rounded-0 me-5">
+      {links.map((link) => (
+        <Link
+          key={link}
+          to={link}
+          className={`list-group-item text-danger border border-0 ${pathname.includes(link) ? "active text-black" : ""}`}>
+          {link}
+        </Link>
+      ))}
+    </div>
+  );
+}

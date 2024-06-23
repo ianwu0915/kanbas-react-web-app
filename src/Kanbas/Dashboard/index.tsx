@@ -1,102 +1,185 @@
-export default function Dashboard() {
-    return (
-      <div id="wd-dashboard">
-        <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
-        <h2 id="wd-dashboard-published">Published Courses (12)</h2> <hr />
-        <div id="wd-dashboard-courses">
-          <div className="wd-dashboard-course">
-            <img src="/images/webdev.png" width={200} />
-            <div>
-              <a className="wd-dashboard-course-link"
-                href="#/Kanbas/Courses/1234/Home">
-                CS5610 Web Development
-              </a>
-              <p className="wd-dashboard-course-title">
-                Full Stack software developer
-              </p>
-              <a href="#/Kanbas/Courses/1234/Home"> Go </a>
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import * as db from "../Database";
+import { setCurrentUser } from "../Account/reducer";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { MdMessage } from "react-icons/md";
+import randomImage from "../RandomImage";
+import * as client from "../Courses/client";
+import "./style.css";
+
+export default function Dashboard({
+  courses,
+  course,
+  setCourse,
+  addNewCourse,
+  deleteCourse,
+  updateCourse,
+  errorMessage,
+}: {
+  courses: any[];
+  course: any;
+  setCourse: (course: any) => void;
+  addNewCourse: () => void;
+  deleteCourse: (course: any) => void;
+  updateCourse: () => void;
+  errorMessage: string | null;
+}) {
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  console.log("current user:", currentUser);
+  const [userCourse, setUserCourse] = useState<any[]>([]);
+
+  const fetchUserCourses = async () => {
+    const courses = await client.fetchAllCoursesForUser(currentUser._id);
+    console.log("courses", courses);
+    setUserCourse(courses);
+    // setCurrentUser({ ...currentUser, enrolledCourses: courses });
+  };
+
+  console.log("userCourse", userCourse);
+  console.log("currentUser", currentUser);
+
+  useEffect(() => {
+    fetchUserCourses();
+  }, [currentUser]);
+
+  return (
+    <div id="wd-dashboard">
+      <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
+      {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+      {currentUser.role === "FACULTY" && (
+        <>
+          <h5>
+            New Course
+            <button
+              className="btn btn-primary float-end"
+              id="wd-add-new-course-click"
+              onClick={addNewCourse}
+            >
+              Add
+            </button>
+            <button
+              className="btn btn-warning float-end me-2"
+              onClick={updateCourse}
+              id="wd-update-course-click"
+            >
+              Update
+            </button>
+          </h5>
+          <br />
+          {/* add input element for each of fields in course state variable*/}
+          <input
+            value={course.name}
+            className="form-control mb-2"
+            onChange={(e) => setCourse({ ...course, name: e.target.value })}
+          />
+          <input
+            value={course.number}
+            className="form-control mb-2"
+            onChange={(e) => setCourse({ ...course, number: e.target.value })}
+          />
+          <textarea
+            value={course.description}
+            className="form-control"
+            onChange={(e) =>
+              setCourse({ ...course, description: e.target.value })
+            }
+          />
+          <hr />
+        </>
+      )}
+      <br />
+      {currentUser.role === "STUDENT" && (
+        <Link
+          to="/Kanbas/AllCourses"
+          className="btn btn-primary float-start"
+          id="wd-enroll-course-click"
+        >
+          Register Course
+        </Link>
+      )}
+      <br />
+      <br />
+      <hr />
+      <h2 id="wd-dashboard-published">{currentUser.role === "Student"? "Your Registered Courses" : "Your Courses"} ({userCourse.length})</h2>{" "}
+      <hr />
+      <div id="wd-dashboard-courses" className="row">
+        <div className="row row-cols-1 row-cols-md-5 g-4">
+          {userCourse.map((course) => (
+            <div className="wd-dashboard-course col" style={{ width: "300px", height: "450px" }}>
+              <Link
+                to={`/Kanbas/Courses/${course.number}/Home`}
+                className="text-decoration-none"
+              >
+                <div className="card rounded-3 overflow-hidden">
+                  <img
+                     src={`/images/${randomImage(course._id)}`}
+                    height="{170}"
+                    className="fixed-size-img"
+                  />
+                  <div className="card-body">
+                    <span
+                      className="wd-dashboard-course-link"
+                      style={{
+                        textDecoration: "none",
+                        color: "navy",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {course.name}
+                    </span>
+                    <p
+                      className="wd-dashboard-course-title card-text"
+                      style={{ maxHeight: 53, overflow: "hidden" }}
+                    >
+                      {course.description}
+                    </p>
+                    <Link
+                      to={`/Kanbas/Courses/${course._id}/Home`}
+                      className="btn"
+                    >
+                      <MdMessage
+                        style={{
+                          width: "30px",
+                          height: "30px",
+                          paddingLeft: 0,
+                        }}
+                      />
+                    </Link>
+
+                    {currentUser.role === "FACULTY" && (
+                    <div >
+                      <button
+                        onClick={(event) => {
+                          event.preventDefault();
+                          deleteCourse(course._id);
+                        }}
+                        className="btn btn-danger float-end"
+                        id="wd-delete-course-click"
+                      >
+                        Delete
+                      </button>
+                      <button
+                        id="wd-edit-course-click"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          setCourse(course);
+                        }}
+                        className="btn btn-warning me-2 float-end"
+                      >
+                        Edit
+                      </button>
+                    </div>
+                    )} 
+
+                  </div>
+                </div>
+              </Link>
             </div>
-          </div>
-          <div className="wd-dashboard-course">
-            <img src="/images/algo.png" width={200} />
-            <div>
-              <a className="wd-dashboard-course-link"
-                href="#/Kanbas/Courses/1234/Home">
-                CS5800 Algorithm
-              </a>
-              <p className="wd-dashboard-course-title">
-                Data structure and algorithm
-              </p>
-              <a href="#/Kanbas/Courses/1234/Home"> Go </a>
-            </div>
-          </div>
-          <div className="wd-dashboard-course">
-            <img src="/images/cloud.png" width={200} />
-            <div>
-              <a className="wd-dashboard-course-link"
-                href="#/Kanbas/Courses/1234/Home">
-                CS5710 Cloud Computing
-              </a>
-              <p className="wd-dashboard-course-title">
-                Cloud computing and storage
-              </p>
-              <a href="#/Kanbas/Courses/1234/Home"> Go </a>
-            </div>
-          </div>
-          <div className="wd-dashboard-course">
-            <img src="/images/mobile-app.png" width={200} />
-            <div>
-              <a className="wd-dashboard-course-link"
-                href="#/Kanbas/Courses/1234/Home">
-                CS5520 Mobile App Development
-              </a>
-              <p className="wd-dashboard-course-title">
-                Android and iOS app development
-              </p>
-              <a href="#/Kanbas/Courses/1234/Home"> Go </a>
-            </div>
-          </div>
-          <div className="wd-dashboard-course">
-            <img src="/images/sysdesign.png" width={200} />
-            <div>
-              <a className="wd-dashboard-course-link"
-                href="#/Kanbas/Courses/1234/Home">
-                CS5310 System Design 
-              </a>
-              <p className="wd-dashboard-course-title">
-                System design and architecture
-              </p>
-              <a href="#/Kanbas/Courses/1234/Home"> Go </a>
-            </div>
-          </div>
-          <div className="wd-dashboard-course">
-            <img src="/images/python.png" width={200} />
-            <div>
-              <a className="wd-dashboard-course-link"
-                href="#/Kanbas/Courses/1234/Home">
-                CS5001 Python Programming
-              </a>
-              <p className="wd-dashboard-course-title">
-                Python programming language
-              </p>
-              <a href="#/Kanbas/Courses/1234/Home"> Go </a>
-            </div>
-          </div>
-          <div className="wd-dashboard-course">
-            <img src="/images/ood.png" width={200} />
-            <div>
-              <a className="wd-dashboard-course-link"
-                href="#/Kanbas/Courses/1234/Home">
-                CS5004 Object Oriented Programming
-              </a>
-              <p className="wd-dashboard-course-title">
-                Object oriented programming
-              </p>
-              <a href="#/Kanbas/Courses/1234/Home"> Go </a>
-            </div>
-          </div>
-          
+          ))}
         </div>
       </div>
-  );}
-  
+    </div>
+  );
+}

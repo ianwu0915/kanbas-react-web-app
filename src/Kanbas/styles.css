@@ -1,0 +1,28 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+body * {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.btn-secondary {
+  --bs-btn-color: #000;
+  --bs-btn-bg: #fcfcfc;
+  --bs-btn-border-color: #c7cdd1;
+  --bs-btn-hover-color: #fff;
+}
+.bg-secondary {
+  background-color: #c7cdd1 !important;
+}
+.border-gray {
+  border: 1px solid gray;
+}
+
+.add-answer-hover:hover {
+  color: black; /* Changes text color to black on hover */
+}
+
+.radio-options input[type="radio"]:checked + label {
+  color: green;
+}

@@ -1,0 +1,42 @@
+.card-body {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wd-dashboard-course-link {
+  text-decoration: none;
+}
+
+.fixed-size-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover; /* Ensures the image covers the entire container without stretching */
+}
+
+.wd-dashboard-course-title {
+  text-decoration: none;
+  color: rgb(12, 115, 193);
+  font-weight: bold;
+  font-size: 17px;
+}
+.wd-dashboard-course-subtitle {
+  font-size: 18px;
+  color: gray;
+  padding: 0px;
+}
+
+.wd-dashboard-course-term {
+  font-size: 15px;
+  color: gray;
+  padding: 0px;
+}
+
+.text-truncate-ellipsis {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
