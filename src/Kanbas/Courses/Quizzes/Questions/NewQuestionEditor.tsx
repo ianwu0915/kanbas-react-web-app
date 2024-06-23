@@ -62,6 +62,16 @@ export default function QuestionEditor({
     setChoices(newChoices);
   };
 
+  const handleFillInTheBlankChoiceChange = (value: any, index : any) => {
+    const newChoices = choices.map((choice: any, i: any) => {
+      if (i === index) {
+        return { ...choice, text: value, correct: true};
+      }
+      return choice;
+    });
+    setChoices(newChoices);
+  };
+
   const onCancel = () => {
     setEditQuestion(false);
   };
@@ -170,7 +180,6 @@ export default function QuestionEditor({
             className="mb-5"
             theme="snow"
             value={question.questionText}
-            // readOnly={true} modules={{toolbar: false}}
             onChange={(value) => {
               setQuestion({ ...question, questionText: value });
             }}
@@ -200,7 +209,7 @@ export default function QuestionEditor({
                   className="form-control"
                   value={choice.text}
                   placeholder={questionType !== "Multiple Choice"? "Possible Answer" : "Possible Choice"}
-                  onChange={(e) => handleChoiceChange(e.target.value, index)}
+                  onChange={(e) => {questionType === "Multiple Choice"? handleChoiceChange(e.target.value, index) : handleFillInTheBlankChoiceChange(e.target.value, index)}}
                 />
                 <button
                   className="btn btn-danger"

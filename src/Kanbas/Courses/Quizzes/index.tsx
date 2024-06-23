@@ -34,7 +34,7 @@ export default function Modules() {
   }
 
   const handleOnclick = (quizId: string) => {
-    navigate(`${quizId}/detail`);
+    navigate(`${quizId}`);
   }
 
   useEffect(() => {
