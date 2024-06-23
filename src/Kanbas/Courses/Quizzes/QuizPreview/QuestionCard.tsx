@@ -47,7 +47,7 @@ export default function QuestionCard({
   return (
     <div className="card question-card mb-4">
       <div className="card-header d-flex justify-content-between">
-        <h5>Question {question.title}</h5>
+        <h5 className='pt-1'>Question {question.title}</h5>
         <span>{question.points} pts</span>
       </div>
       <div className="card-body">

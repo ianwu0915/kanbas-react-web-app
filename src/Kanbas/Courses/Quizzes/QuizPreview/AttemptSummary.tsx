@@ -67,13 +67,20 @@ export default function AttemptSummary() {
       <h1 className="mb-4">Quiz Summary</h1>
       {quiz && (
         <div>
-          <p>Total Attempts Allowed: {quiz.howManyAttempts}</p>
-          <p>Remaining Attempts: {remainingAttempts}</p>
-          {remainingAttempts > 0 && (
+        <p>Total Attempts Allowed: {quiz.howManyAttempts}</p>
+        <p>Remaining Attempts: {remainingAttempts}</p>
+        {remainingAttempts > 0 && (
+          <>
             <Link to={`../Quizzes/${qid}`} className="btn btn-primary">
               Take Quiz
             </Link>
-          )}
+            {currentUser.role === "FACULTY" && (
+              <Link to={`../Quizzes/${qid}/editor`} className="btn btn-danger ms-3">
+                Edit Quiz
+              </Link>
+            )}
+          </>
+        )}
         </div>
       )}
       {lastAttempt && (

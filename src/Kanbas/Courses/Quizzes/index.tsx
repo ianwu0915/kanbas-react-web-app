@@ -72,11 +72,11 @@ export default function Modules() {
         </div>
         {quizzes.map((quiz: any) => (
           <li className="wd-lesson list-group-item p-3 ps-1 fs-4" >
-            <div className="d-flex align-items-center">
+            <div className="d-flex align-items-center" >
               <div className="icon-block me-3">
-                <FaSpaceAwesome className="fs-4 ms-3 me-2" style={{ color: "green" }} onClick={() => handleOnclick(quiz._id)}/>
+                <FaSpaceAwesome className="fs-4 ms-3 me-2" style={{ color: "green" }}/>
               </div>
-              <div className="flex-grow-1 w-50" >
+              <div className="flex-grow-1 w-50" onClick={() => handleOnclick(quiz._id)} >
                 <span className ="fs-4 fw-bolder">{quiz.name}</span>
                 <p className="mb-0 fs-6">
                     <span className="ms-0 me-4"> 

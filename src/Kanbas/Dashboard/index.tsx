@@ -100,21 +100,22 @@ export default function Dashboard({
         </Link>
       )}
       <br />
+      <br />
       <hr />
-      <h2 id="wd-dashboard-published">Your Courses ({courses.length})</h2>{" "}
+      <h2 id="wd-dashboard-published">{currentUser.role === "Student"? "Your Registered Courses" : "Your Courses"} ({userCourse.length})</h2>{" "}
       <hr />
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
           {userCourse.map((course) => (
-            <div className="wd-dashboard-course col" style={{ width: "300px" }}>
+            <div className="wd-dashboard-course col" style={{ width: "300px", height: "450px" }}>
               <Link
                 to={`/Kanbas/Courses/${course.number}/Home`}
                 className="text-decoration-none"
               >
                 <div className="card rounded-3 overflow-hidden">
                   <img
-                    src={`/images/${randomImage()}`}
-                    height="{160}"
+                     src={`/images/${randomImage(course._id)}`}
+                    height="{170}"
                     className="fixed-size-img"
                   />
                   <div className="card-body">
@@ -146,26 +147,32 @@ export default function Dashboard({
                         }}
                       />
                     </Link>
-                    <button
-                      onClick={(event) => {
-                        event.preventDefault();
-                        deleteCourse(course._id);
-                      }}
-                      className="btn btn-danger float-end"
-                      id="wd-delete-course-click"
-                    >
-                      Delete
-                    </button>
-                    <button
-                      id="wd-edit-course-click"
-                      onClick={(event) => {
-                        event.preventDefault();
-                        setCourse(course);
-                      }}
-                      className="btn btn-warning me-2 float-end"
-                    >
-                      Edit
-                    </button>
+
+                    {currentUser.role === "FACULTY" && (
+                    <div >
+                      <button
+                        onClick={(event) => {
+                          event.preventDefault();
+                          deleteCourse(course._id);
+                        }}
+                        className="btn btn-danger float-end"
+                        id="wd-delete-course-click"
+                      >
+                        Delete
+                      </button>
+                      <button
+                        id="wd-edit-course-click"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          setCourse(course);
+                        }}
+                        className="btn btn-warning me-2 float-end"
+                      >
+                        Edit
+                      </button>
+                    </div>
+                    )} 
+
                   </div>
                 </div>
               </Link>

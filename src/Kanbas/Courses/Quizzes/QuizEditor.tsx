@@ -20,8 +20,8 @@ export default function QuizEditor() {
     assignmentGroup: "Quizzes",
     shuffleAnswers: true,
     timeLimit: 20,
-    multipleAttempts: false,
-    howManyAttempts: 0,
+    multipleAttempts: true,
+    howManyAttempts: 1,
     showCorrectAnswers: "Immediately",
     accessCode: "",
     oneQuestionAtATime: true,
@@ -43,15 +43,17 @@ export default function QuizEditor() {
   //   correctAnswer: string;
   // }
 
- const [questions, setQuestions] = useState<any[]>([]);
+  const [questions, setQuestions] = useState<any[]>([]);
 
- const fetchQuestions = async () => {
-  if (qid) {
-    const questions = await questionClient.findQuestionsForQuiz(qid as string);
-    console.log("questions from fetchQuestions is:", questions);
-    setQuestions(questions);
-  }
-  }
+  const fetchQuestions = async () => {
+    if (qid) {
+      const questions = await questionClient.findQuestionsForQuiz(
+        qid as string
+      );
+      console.log("questions from fetchQuestions is:", questions);
+      setQuestions(questions);
+    }
+  };
 
   const [question, setQuestion] = useState({
     quiz: "",
@@ -92,7 +94,7 @@ export default function QuizEditor() {
     console.log("quiz before create is:", quiz);
     const newQuiz = await client.createQuiz(quiz);
     console.log("new quiz after create is:", newQuiz);
-    // Create All the questions 
+    // Create All the questions
     questions.forEach(async (question) => {
       question.quiz = newQuiz._id;
       const newQuestion = await questionClient.createQuestion(question);
@@ -114,7 +116,7 @@ export default function QuizEditor() {
       const status = await questionClient.deleteQuestion(question._id);
       console.log("status after delete is:", status);
     });
-  }
+  };
 
   // handleSave function to dispatch the addQuiz or updateQuiz action
   const handleSave = () => {
@@ -136,10 +138,10 @@ export default function QuizEditor() {
     setEditQuestion(false);
   };
 
-  const handleAddNewQuestion = () => { 
+  const handleAddNewQuestion = () => {
     setEditQuestion(true);
     setCreateQuestion(true);
-  }
+  };
 
   useEffect(() => {
     console.log("questions after save is:", questions);
@@ -320,12 +322,41 @@ export default function QuizEditor() {
                     type="checkbox"
                     id="wd-multiple-attempts"
                     className="form-check-input"
-                    checked={quiz.shuffleAnswers}
+                    checked={quiz.multipleAttempts}
                     onChange={(e) =>
-                      setQuiz({ ...quiz, shuffleAnswers: e.target.checked })
+                      setQuiz({ ...quiz, multipleAttempts: e.target.checked })
                     }
                   />
                 </div>
+              </div>
+              <div className="row mb-3">
+                {quiz.multipleAttempts && (
+                  <div className="row mb-3">
+                    <div className="col-md-4 text-md-end">
+                      <label
+                        htmlFor="wd-how-many-attempts"
+                        className="form-label"
+                      >
+                        How many attempts
+                      </label>
+                    </div>
+                    <div className="col-md-1">
+                      <input
+                        type="number"
+                        id="wd-how-many-attempts"
+                        className="form-control"
+                        value={quiz.howManyAttempts}
+                        placeholder="Enter number of attempts"
+                        onChange={(e) =>
+                          setQuiz({
+                            ...quiz,
+                            howManyAttempts: parseInt(e.target.value),
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="row mb-3">
@@ -470,9 +501,16 @@ export default function QuizEditor() {
                 </div>
               </>
             ) : createQuestion ? (
-              <NewQuestionEditor onSave={handleQuestionSave} setEditQuestion={setEditQuestion} />
+              <NewQuestionEditor
+                onSave={handleQuestionSave}
+                setEditQuestion={setEditQuestion}
+              />
             ) : (
-              <QuestionEditor questionFromQuiz={question} onSave={handleQuestionSave} setEditQuestion={setEditQuestion} />
+              <QuestionEditor
+                questionFromQuiz={question}
+                onSave={handleQuestionSave}
+                setEditQuestion={setEditQuestion}
+              />
             )}
           </>
         )}

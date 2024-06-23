@@ -1,7 +1,4 @@
-import React from 'react';
-
-// Step 1: List all images
-// Assuming your images are stored in the public/images folder
+// src/Kanbas/RandomImage.ts
 const images = [
   'algo.png',
   'cloud.png',
@@ -13,17 +10,24 @@ const images = [
   // Add more image file names here
 ];
 
-// a function to generate a random image
+// A mapping to store images for each course ID
+const imageMappings: { [key: string]: string } = {};
 
-const randomImage = () => {
-  // Step 2: Generate a random index
+const randomImage = (courseId: string) => {
+  // If we already have an image for this course, return it
+  if (imageMappings[courseId]) {
+    return imageMappings[courseId];
+  }
+
+  // Generate a random index
   const randomIndex = Math.floor(Math.random() * images.length);
 
-  // Step 3: Select an image
+  // Select an image and store the mapping
   const selectedImage = images[randomIndex];
+  imageMappings[courseId] = selectedImage;
 
-  // Step 4: Display the image
-  return selectedImage
+  // Return the selected image
+  return selectedImage;
 };
 
 export default randomImage;

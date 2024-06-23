@@ -43,7 +43,7 @@ export default function RegisterCourses({ courses }: { courses: any[] }) {
           >
             <div className="card rounded-3 overflow-hidden">
               <img
-                src={`/images/${randomImage()}`}
+                src={`/images/${randomImage(course._id)}`}
                 height="{160}"
                 className="fixed-size-img"
               />
