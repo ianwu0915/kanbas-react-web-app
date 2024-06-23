@@ -146,7 +146,7 @@ export default function QuestionCard({
         {!readonly && (
           <div className="d-flex justify-content-between mt-3">
             {!isFirstQuestion && <button className="btn btn-secondary" onClick={onPrevious}>Previous</button>}
-            <button className="btn btn-primary" onClick={onNext}>{isLastQuestion ? 'Finish' : 'Next'}</button>
+            {!isLastQuestion && <button className="btn btn-primary" onClick={onNext}>Next</button>}
           </div>
         )}
       </div>
