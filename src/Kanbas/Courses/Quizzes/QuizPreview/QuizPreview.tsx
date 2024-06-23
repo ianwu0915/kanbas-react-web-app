@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import * as questionClient from '../Questions/client';
 import * as quizClient from '../client';
 import * as client from './client';
@@ -29,11 +31,14 @@ interface Answer {
 }
 
 export default function QuizPreview() {
+const navigate = useNavigate();
   const { qid } = useParams<{ qid: string }>();
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [studentId, setStudentId] = useState(''); 
   const [answers, setAnswers] = useState<Answer[]>([]);
+  const currentUser = useSelector((state: any) => state.accountReducer.currentUser);
 
   useEffect(() => {
     const fetchQuizData = async () => {
@@ -41,6 +46,7 @@ export default function QuizPreview() {
       const questionsData = await questionClient.findQuestionsForQuiz(qid as string);
       setQuiz(quizData);
       setQuestions(questionsData);
+      setStudentId(currentUser._id);
     };
     fetchQuizData();
   }, [qid]);
@@ -81,7 +87,7 @@ export default function QuizPreview() {
   };
 
   const handleSubmit = async () => {
-    const studentId = '64a532b8fbc3ab0001485d0c'; // Replace with the actual ObjectId of the student
+    const currentStudentId = studentId; // Replace with the actual ObjectId of the student
     const score = calculateScore(answers);
 
     const submission = {
@@ -93,6 +99,7 @@ export default function QuizPreview() {
     };
 
     await client.submitAnswers(submission);
+    navigate(`summary`);
   };
 
   const calculateScore = (answers: Answer[]) => {
@@ -109,10 +116,7 @@ export default function QuizPreview() {
     <div className="container quiz-preview mt-4">
       <h1>Quiz Instructions</h1>
       <div className="row">
-        <div className="col-md-3">
-          <QuestionList questions={questions} onQuestionClick={handleQuestionClick} />
-        </div>
-        <div className="col-md-9">
+        <div className="col-md-8 mt-5">
           {questions.length > 0 && (
             <QuestionCard
               question={questions[currentQuestionIndex]}
@@ -121,12 +125,15 @@ export default function QuizPreview() {
               onAnswerChange={handleAnswerChange}
               isLastQuestion={currentQuestionIndex === questions.length - 1}
               isFirstQuestion={currentQuestionIndex === 0}
-              answer={getAnswerForQuestion(questions[currentQuestionIndex]._id)}
+            //   answer={getAnswerForQuestion(questions[currentQuestionIndex]._id)}
             />
           )}
           {currentQuestionIndex === questions.length - 1 && (
             <button className="btn btn-primary mt-3" onClick={handleSubmit}>Submit Quiz</button>
           )}
+        </div>
+        <div className="col-md-3">
+          <QuestionList questions={questions} onQuestionClick={handleQuestionClick} />
         </div>
       </div>
     </div>
