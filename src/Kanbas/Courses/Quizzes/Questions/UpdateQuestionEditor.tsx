@@ -7,7 +7,6 @@ import "../../../styles.css";
 import { FaPlus } from "react-icons/fa6";
 import ReactQuill from "react-quill";
 
-
 import "react-quill/dist/quill.snow.css";
 
 export default function QuestionEditor({
@@ -20,45 +19,77 @@ export default function QuestionEditor({
   setEditQuestion: (value: boolean) => void;
 }) {
   const { qid } = useParams();
-  const [question, setQuestion] = useState(questionFromQuiz? questionFromQuiz :{
-    quiz: qid,
-    title: "",
-    type: "Multiple Choice",
-    points: 0,
-    questionText: "",
-    choices: [],
-    correctAnswer: "",
-  });
-
+  const [question, setQuestion] = useState(
+    questionFromQuiz
+      ? questionFromQuiz
+      : {
+          quiz: qid,
+          title: "",
+          type: "Multiple Choice",
+          points: 0,
+          questionText: "",
+          choices: [],
+          correctAnswer: "",
+        }
+  );
 
   const stripHtml = (htmlString: string) => {
-    return htmlString.replace(/<[^>]*>?/gm, '');
+    return htmlString.replace(/<[^>]*>?/gm, "");
   };
 
-  const [questionType, setQuestionType] = useState("Multiple Choice");
+  const [questionType, setQuestionType] = useState(questionFromQuiz.type);
 
   const updateQuestion = async (questions: any) => {
     const status = await client.updateQuestion(questions);
     console.log("status from updateQuestion", status);
-  }
+  };
 
   const createQuestion = async (question: any) => {
     const status = await client.createQuestion(question);
     console.log("status from createQuestion", status);
-  }
+  };
 
-  const [choices, setChoices] = useState(questionFromQuiz.choices? questionFromQuiz.choices :[{ text: "", correct: false }]);
+  const [choices, setChoices] = useState(() => {
+    console.log("questionFromQuiz", questionFromQuiz);
+    // Check if questionFromQuiz.choices exists and is not empty
+    if (questionFromQuiz.choices && questionFromQuiz.choices.length > 0) {
+      console.log("questionFromQuiz.choices", questionFromQuiz.choices);
+      return questionFromQuiz.choices;
+    } else {
+      // Determine the default choices based on the question type
+      switch (questionFromQuiz.type) {
+        case "True/False":
+          return [
+            { text: "True", correct: false },
+            { text: "False", correct: false },
+          ];
+        case "Multiple Choice":
+        case "Fill In the Blank":
+        default:
+          return [{ text: "", correct: false }];
+      }
+    }
+  });
+
+  const [trueFalseChoices, setTrueFalseChoices] = useState(
+    questionFromQuiz.type === "True/False"
+      ? questionFromQuiz.choices
+      : [
+          { text: "True", correct: false },
+          { text: "False", correct: false },
+        ]
+  );
 
   const addChoice = () => {
     setChoices([...choices, { text: "", correct: false }]);
   };
 
   const removeChoice = (index: any) => {
-    setChoices(choices.filter((_: any, i:any) => i !== index));
+    setChoices(choices.filter((_: any, i: any) => i !== index));
   };
 
   const handleChoiceChange = (value: any, index: any) => {
-    const newChoices = choices.map((choice:any, i:any) => {
+    const newChoices = choices.map((choice: any, i: any) => {
       if (i === index) {
         return { ...choice, text: value };
       }
@@ -72,7 +103,7 @@ export default function QuestionEditor({
   };
 
   const handleCorrectChoiceChange = (index: any) => {
-    const newChoices = choices.map((choice:any, i:any) => ({
+    const newChoices = choices.map((choice: any, i: any) => ({
       ...choice,
       correct: i === index,
     }));
@@ -82,32 +113,64 @@ export default function QuestionEditor({
   useEffect(() => {
     console.log("current choices include: ", choices);
     // console.log("current question text", stripHtml(question.questionText));
-  }, [choices]);
+  }, [choices, trueFalseChoices]);
+
+  const handleTypeChange = (type: string) => {
+    let newChoices;
+    switch (type) {
+      case "True/False":
+        newChoices = [
+          { text: "True", correct: false },
+          { text: "False", correct: false },
+        ];
+        setTrueFalseChoices(newChoices);
+        break;
+      case "Multiple Choice":
+      case "Fill In the Blank":
+        newChoices = [{ text: "", correct: false }];
+        break;
+      default:
+        newChoices = [{ text: "", correct: false }];
+    }
+    setChoices(newChoices);
+  };
+
+  const handleCorrectTrueFalseChange = (index: any) => {
+    const newChoices = trueFalseChoices.map((choice: any, i: any) => ({
+      ...choice,
+      correct: i === index,
+    }));
+    setTrueFalseChoices(newChoices);
+  };
 
   const handleSave = () => {
     const context = stripHtml(question.questionText);
     const questionSave = {
       ...question,
-      choices: choices,
+      choices: question.type === "True/False" ? trueFalseChoices : choices,
       questionText: context,
     };
 
-    // If the qid exists, then we are updating the question
-    if (qid) {
-      if (questionFromQuiz) {
-        questionSave._id = questionFromQuiz._id;
-        updateQuestion(questionSave);
-      } else {
-        createQuestion(questionSave);
-      }
+    updateQuestion(questionSave);
+    setEditQuestion(false);
 
-      setEditQuestion(false);
-    } else {
-      // If the qid does not exist, then we are in the process of creating a new quiz with new questions
-      // So We leave the creation to the QuizEditor component
-      // We passed the question created to the QuizEditor component
-      onSave(questionSave);
-    }
+
+    // // If the qid exists, then we are updating the question
+    // if (qid) {
+    //   if (questionFromQuiz) {
+    //     questionSave._id = questionFromQuiz._id;
+    //     updateQuestion(questionSave);
+    //   } else {
+    //     createQuestion(questionSave);
+    //   }
+
+    //   setEditQuestion(false);
+    // } else {
+    //   // If the qid does not exist, then we are in the process of creating a new quiz with new questions
+    //   // So We leave the creation to the QuizEditor component
+    //   // We passed the question created to the QuizEditor component
+    //   onSave(questionSave);
+    // }
   };
 
   return (
@@ -132,10 +195,12 @@ export default function QuestionEditor({
           <div className="" style={{ width: "300px" }}>
             <select
               className="form-select"
-              value={questionType}
+              value={question.type}
               onChange={(e) => {
-                setQuestionType(e.target.value);
-                setQuestion({ ...question, type: e.target.value });
+                const newType = e.target.value;
+    setQuestionType(newType);
+    setQuestion({ ...question, type: newType });
+    handleTypeChange(newType);
               }}
             >
               <option>Multiple Choice</option>
@@ -173,7 +238,7 @@ export default function QuestionEditor({
             value={question.questionText}
             // readOnly={true} modules={{toolbar: false}}
             onChange={(value) => {
-              setQuestion({ ...question, questionText: value })
+              setQuestion({ ...question, questionText: value });
             }}
             style={{ height: "200px" }}
           />
@@ -193,16 +258,18 @@ export default function QuestionEditor({
           <div className="mb-4">
             <h4 className="mt-5 mb-4 fs-5 fw-bold">Answers:</h4>
             <label className="form-label">Choices</label>
-            {choices.map((choice:any, index:any) => (
+            {choices.map((choice: any, index: any) => (
               <div key={index} className="input-group mb-3 w-75">
-                <div className="input-group-text">
-                  <input
-                    type="radio"
-                    name="correctAnswer"
-                    checked={choice.correct}
-                    onChange={() => handleCorrectChoiceChange(index)}
-                  />
-                </div>
+                {questionType === "Multiple Choice" && (
+                  <div className="input-group-text">
+                    <input
+                      type="radio"
+                      name="correctAnswer"
+                      checked={choice.correct}
+                      onChange={() => handleCorrectChoiceChange(index)}
+                    />
+                  </div>
+                )}
                 <input
                   type="text"
                   className="form-control"
@@ -229,28 +296,19 @@ export default function QuestionEditor({
         ) : (
           <div className="radio-options">
             <h4 className="mb-4 fs-5 fw-bold">Answers:</h4>
-            <div className="mb-3 fs-6">
-              <input
-                type="radio"
-                id="trueOption"
-                name="trueFalse"
-                value="True"
-              />
-              <label htmlFor="trueOption" className="ms-2">
-                True
-              </label>
-            </div>
-            <div className="mb-3 fs-6">
-              <input
-                type="radio"
-                id="falseOption"
-                name="trueFalse"
-                value="False"
-              />
-              <label htmlFor="falseOption" className="ms-2">
-                False
-              </label>
-            </div>
+            {trueFalseChoices.map((choice: any, index: any) => (
+              <div key={index} className="mb-3 fs-6">
+                <input
+                  type="radio"
+                  name="correctAnswer"
+                  checked={choice.correct}
+                  onChange={() => handleCorrectTrueFalseChange(index)}
+                />
+                <label htmlFor={`option-${index}`} className="ms-2">
+                  {choice.text}
+                </label>
+              </div>
+            ))}
           </div>
         )}
 

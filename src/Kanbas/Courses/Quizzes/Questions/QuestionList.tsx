@@ -15,12 +15,13 @@ interface Question {
   }
 
 export default function QuestionList({
-  questions, setQuestion, setQuestions, setEditQuestion
+  questions, setQuestion, setQuestions, setEditQuestion, setCreateQuestion,
 }: {
   questions: Question[];
   setQuestion: (question: any) => void;
   setQuestions: (questions: Question[]) => void;
   setEditQuestion: (value: boolean) => void;
+  setCreateQuestion: (value: boolean) => void;
 }) {
   const { qid } = useParams();
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ export default function QuestionList({
   const handleEdit = (index: number) => {
     setQuestion(questions[index]);
     setEditQuestion(true);
+    setCreateQuestion(false);
   };
 
   return (

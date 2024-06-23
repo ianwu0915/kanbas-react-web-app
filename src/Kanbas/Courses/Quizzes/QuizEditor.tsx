@@ -4,7 +4,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import * as client from "./client";
 import * as questionClient from "./Questions/client";
-import QuestionEditor from "./Questions/QuestionEditor";
+import QuestionEditor from "./Questions/UpdateQuestionEditor";
+import NewQuestionEditor from "./Questions/NewQuestionEditor";
 import QuestionList from "./Questions/QuestionList";
 import { FaPlus } from "react-icons/fa";
 
@@ -45,9 +46,11 @@ export default function QuizEditor() {
  const [questions, setQuestions] = useState<any[]>([]);
 
  const fetchQuestions = async () => {
+  if (qid) {
     const questions = await questionClient.findQuestionsForQuiz(qid as string);
     console.log("questions from fetchQuestions is:", questions);
     setQuestions(questions);
+  }
   }
 
   const [question, setQuestion] = useState({
@@ -62,6 +65,7 @@ export default function QuizEditor() {
 
   const [activeTab, setActiveTab] = useState("details");
   const [editQuestion, setEditQuestion] = useState(false);
+  const [createQuestion, setCreateQuestion] = useState(false);
 
   const fetchQuiz = async () => {
     const quiz = await client.findQuizById(qid as string);
@@ -131,6 +135,11 @@ export default function QuizEditor() {
     setQuestions([...questions, newQuestion]);
     setEditQuestion(false);
   };
+
+  const handleAddNewQuestion = () => { 
+    setEditQuestion(true);
+    setCreateQuestion(true);
+  }
 
   useEffect(() => {
     console.log("questions after save is:", questions);
@@ -439,32 +448,34 @@ export default function QuizEditor() {
             </div>
           </div>
         )}
-        {activeTab === "questions" &&(
-         <>
-          {!editQuestion ? (
-            <>
-              <QuestionList
-                questions={questions}
-                setQuestion={setQuestion}
-                setQuestions={setQuestions}
-                setEditQuestion={setEditQuestion}
-              />
-              <div className="d-flex justify-content-center my-3">
-                <button
-                  className="btn btn-secondary mt-4 p-3"
-                  onClick={() => setEditQuestion(true)}
-                >
-                  <FaPlus className="me-2 mb-1" />
-                  New Question
-                </button>
-              </div>
-            </>
-          ) : (
-            <QuestionEditor questionFromQuiz={question} onSave={handleQuestionSave} setEditQuestion={setEditQuestion}/>
-
-          )}
-        </>
-      )}
+        {activeTab === "questions" && (
+          <>
+            {!editQuestion ? (
+              <>
+                <QuestionList
+                  questions={questions}
+                  setQuestion={setQuestion}
+                  setQuestions={setQuestions}
+                  setEditQuestion={setEditQuestion}
+                  setCreateQuestion={setCreateQuestion}
+                />
+                <div className="d-flex justify-content-center my-3">
+                  <button
+                    className="btn btn-secondary mt-4 p-3"
+                    onClick={handleAddNewQuestion}
+                  >
+                    <FaPlus className="me-2 mb-1" />
+                    New Question
+                  </button>
+                </div>
+              </>
+            ) : createQuestion ? (
+              <NewQuestionEditor onSave={handleQuestionSave} setEditQuestion={setEditQuestion} />
+            ) : (
+              <QuestionEditor questionFromQuiz={question} onSave={handleQuestionSave} setEditQuestion={setEditQuestion} />
+            )}
+          </>
+        )}
       </div>
     </div>
   );
