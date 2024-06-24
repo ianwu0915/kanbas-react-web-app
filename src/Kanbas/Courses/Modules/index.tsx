@@ -73,7 +73,7 @@ export default function Modules() {
               <div className="wd-title p-3 ps-2 bg-secondary">
                 <BsGripVertical className="me-2 fs-3" />
                 {!module.editing && module.name}
-                {module.editing && (
+                {(module.editing && currentUser.role === "FACULTY") && (
                   <input
                     className="form-control w-50 d-inline-block"
                     onChange={(e) =>
@@ -87,13 +87,13 @@ export default function Modules() {
                     value={module.name}
                   />
                 )}
-                <ModuleControlButtons
+                {currentUser.role === "FACULTY" && (<ModuleControlButtons
                   moduleId={module._id}
                   deleteModule={(moduleId) => {
                     removeModule(moduleId);
                   }}
                   editModule={(moduleId) => dispatch(editModule(moduleId))}
-                />
+                />)}
               </div>
               {module.lessons.map((lesson: any) => (
                 <li className="wd-lesson list-group-item p-3 ps-1">
