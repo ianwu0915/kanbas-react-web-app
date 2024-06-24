@@ -30,15 +30,15 @@ export default function QuestionCard({
   isFirstQuestion,
   readonly,
 }: QuestionCardProps) {
-  const [answer, setAnswer] = useState<string>(selectedAnswer || '');
+  const [currentAnswer, setCurrentAnswer] = useState<string>(selectedAnswer || '');
 
   useEffect(() => {
-    setAnswer(selectedAnswer || '');
+    setCurrentAnswer(selectedAnswer || '');
   }, [selectedAnswer, question]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (readonly) return;
-    setAnswer(e.target.value);
+    setCurrentAnswer(e.target.value);
     if (onAnswerChange) {
       onAnswerChange(question._id, e.target.value);
     }
@@ -61,7 +61,7 @@ export default function QuestionCard({
                   type="radio"
                   name={question._id}
                   value={choice.text}
-                  checked={answer === choice.text}
+                  checked={currentAnswer === choice.text}
                   onChange={handleChange}
                   disabled={readonly}
                 />
@@ -69,7 +69,7 @@ export default function QuestionCard({
                   {choice.text}
                   {readonly && (
                     <>
-                      {answer === choice.text && ' (Your answer)'}
+                      {currentAnswer === choice.text && ' (Your answer)'}
                       {choice.correct && ' (Correct answer)'}
                     </>
                   )}
@@ -83,11 +83,11 @@ export default function QuestionCard({
             <input
               type="text"
               className="form-control mb-3"
-              value={answer}
+              value={currentAnswer}
               onChange={handleChange}
               disabled={readonly}
             />
-            {readonly && !question.choices.some(choice => choice.text === answer && choice.correct) && (
+            {readonly && !question.choices.some(choice => choice.text === currentAnswer && choice.correct) && (
               <div>
                 <strong>Correct Answers:</strong>
                 <ul>
@@ -107,7 +107,7 @@ export default function QuestionCard({
                 type="radio"
                 name={question._id}
                 value="True"
-                checked={answer === 'True'}
+                checked={currentAnswer === 'True'}
                 onChange={handleChange}
                 disabled={readonly}
               />
@@ -115,7 +115,7 @@ export default function QuestionCard({
                 True
                 {readonly && (
                   <>
-                    {answer === 'True' && ' (Your answer)'}
+                    {currentAnswer === 'True' && ' (Your answer)'}
                     {correctAnswer === 'True' && ' (Correct answer)'}
                   </>
                 )}
@@ -127,7 +127,7 @@ export default function QuestionCard({
                 type="radio"
                 name={question._id}
                 value="False"
-                checked={answer === 'False'}
+                checked={currentAnswer === 'False'}
                 onChange={handleChange}
                 disabled={readonly}
               />
@@ -135,7 +135,7 @@ export default function QuestionCard({
                 False
                 {readonly && (
                   <>
-                    {answer === 'False' && ' (Your answer)'}
+                    {currentAnswer === 'False' && ' (Your answer)'}
                     {correctAnswer === 'False' && ' (Correct answer)'}
                   </>
                 )}

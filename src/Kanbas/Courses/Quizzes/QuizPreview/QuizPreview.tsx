@@ -125,7 +125,7 @@ const navigate = useNavigate();
               onAnswerChange={handleAnswerChange}
               isLastQuestion={currentQuestionIndex === questions.length - 1}
               isFirstQuestion={currentQuestionIndex === 0}
-            //   answer={getAnswerForQuestion(questions[currentQuestionIndex]._id)}
+              selectedAnswer={getAnswerForQuestion(questions[currentQuestionIndex]._id)}
             />
           )}
           {currentQuestionIndex === questions.length - 1 && (
